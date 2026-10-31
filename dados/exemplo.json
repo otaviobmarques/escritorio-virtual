@@ -1,0 +1,271 @@
+{
+  "exemplo": true,
+  "aviso": "DADOS DE EXEMPLO — status inventados, não refletem a atividade real dos agentes.",
+  "geradoEm": "2026-10-31T17:00:00-03:00",
+  "setores": [
+    {
+      "id": "redbox",
+      "nome": "RedBox",
+      "descricao": "Agência",
+      "cor": "#d64545",
+      "agentes": [
+        {
+          "id": "redbox-1",
+          "nome": "Caio Coordenador",
+          "status": "parado",
+          "tarefa": "Sem tarefa (exemplo)",
+          "atualizadoEm": "2026-10-31T17:00:00-03:00"
+        },
+        {
+          "id": "redbox-2",
+          "nome": "Julia Designer",
+          "status": "trabalhando",
+          "tarefa": "Tarefa de exemplo em andamento",
+          "atualizadoEm": "2026-10-31T17:00:00-03:00"
+        },
+        {
+          "id": "redbox-3",
+          "nome": "Renato Planejamento",
+          "status": "parado",
+          "tarefa": "Sem tarefa (exemplo)",
+          "atualizadoEm": "2026-10-31T17:00:00-03:00"
+        },
+        {
+          "id": "redbox-4",
+          "nome": "Andreia Tráfego",
+          "status": "esperando",
+          "tarefa": "Aguardando aprovação (exemplo)",
+          "atualizadoEm": "2026-10-31T17:00:00-03:00"
+        },
+        {
+          "id": "redbox-5",
+          "nome": "Helena Compliance",
+          "status": "trabalhando",
+          "tarefa": "Tarefa de exemplo em andamento",
+          "atualizadoEm": "2026-10-31T17:00:00-03:00"
+        },
+        {
+          "id": "redbox-6",
+          "nome": "Vitor Mensuração",
+          "status": "trabalhando",
+          "tarefa": "Tarefa de exemplo em andamento",
+          "atualizadoEm": "2026-10-31T17:00:00-03:00"
+        },
+        {
+          "id": "redbox-7",
+          "nome": "Fernando Métricas",
+          "status": "esperando",
+          "tarefa": "Aguardando aprovação (exemplo)",
+          "atualizadoEm": "2026-10-31T17:00:00-03:00"
+        },
+        {
+          "id": "redbox-8",
+          "nome": "Sérgio Saldo",
+          "status": "trabalhando",
+          "tarefa": "Tarefa de exemplo em andamento",
+          "atualizadoEm": "2026-10-31T17:00:00-03:00"
+        },
+        {
+          "id": "redbox-9",
+          "nome": "Pedro Vídeos",
+          "status": "parado",
+          "tarefa": "Sem tarefa (exemplo)",
+          "atualizadoEm": "2026-10-31T17:00:00-03:00"
+        },
+        {
+          "id": "redbox-10",
+          "nome": "Gabriel Designer",
+          "status": "esperando",
+          "tarefa": "Aguardando aprovação (exemplo)",
+          "atualizadoEm": "2026-10-31T17:00:00-03:00"
+        }
+      ]
+    },
+    {
+      "id": "vertice",
+      "nome": "Vértice",
+      "descricao": "Produtora de vídeo",
+      "cor": "#7b5cd6",
+      "agentes": [
+        {
+          "id": "vertice-1",
+          "nome": "Cecília Coordenação",
+          "status": "trabalhando",
+          "tarefa": "Tarefa de exemplo em andamento",
+          "atualizadoEm": "2026-10-31T17:00:00-03:00"
+        },
+        {
+          "id": "vertice-2",
+          "nome": "Bernardo Diretor de Cenas",
+          "status": "esperando",
+          "tarefa": "Aguardando aprovação (exemplo)",
+          "atualizadoEm": "2026-10-31T17:00:00-03:00"
+        },
+        {
+          "id": "vertice-3",
+          "nome": "Ícaro Motion",
+          "status": "trabalhando",
+          "tarefa": "Tarefa de exemplo em andamento",
+          "atualizadoEm": "2026-10-31T17:00:00-03:00"
+        },
+        {
+          "id": "vertice-4",
+          "nome": "Benício Som",
+          "status": "trabalhando",
+          "tarefa": "Tarefa de exemplo em andamento",
+          "atualizadoEm": "2026-10-31T17:00:00-03:00"
+        },
+        {
+          "id": "vertice-5",
+          "nome": "Aurélia Narração",
+          "status": "trabalhando",
+          "tarefa": "Tarefa de exemplo em andamento",
+          "atualizadoEm": "2026-10-31T17:00:00-03:00"
+        },
+        {
+          "id": "vertice-6",
+          "nome": "Celeste Banco de Imagem",
+          "status": "parado",
+          "tarefa": "Sem tarefa (exemplo)",
+          "atualizadoEm": "2026-10-31T17:00:00-03:00"
+        },
+        {
+          "id": "vertice-7",
+          "nome": "Lis Shorts",
+          "status": "parado",
+          "tarefa": "Sem tarefa (exemplo)",
+          "atualizadoEm": "2026-10-31T17:00:00-03:00"
+        },
+        {
+          "id": "vertice-8",
+          "nome": "Ísis Revisão",
+          "status": "trabalhando",
+          "tarefa": "Tarefa de exemplo em andamento",
+          "atualizadoEm": "2026-10-31T17:00:00-03:00"
+        }
+      ]
+    },
+    {
+      "id": "restaurantes",
+      "nome": "Restaurantes",
+      "descricao": "Operação de restaurantes",
+      "cor": "#e08a2e",
+      "agentes": [
+        {
+          "id": "restaurantes-1",
+          "nome": "Wesley Coordenador",
+          "status": "trabalhando",
+          "tarefa": "Tarefa de exemplo em andamento",
+          "atualizadoEm": "2026-10-31T17:00:00-03:00"
+        },
+        {
+          "id": "restaurantes-2",
+          "nome": "Camila Cardápio",
+          "status": "trabalhando",
+          "tarefa": "Tarefa de exemplo em andamento",
+          "atualizadoEm": "2026-10-31T17:00:00-03:00"
+        },
+        {
+          "id": "restaurantes-3",
+          "nome": "Rogério Compras",
+          "status": "esperando",
+          "tarefa": "Aguardando aprovação (exemplo)",
+          "atualizadoEm": "2026-10-31T17:00:00-03:00"
+        },
+        {
+          "id": "restaurantes-4",
+          "nome": "Diego iFood",
+          "status": "parado",
+          "tarefa": "Sem tarefa (exemplo)",
+          "atualizadoEm": "2026-10-31T17:00:00-03:00"
+        },
+        {
+          "id": "restaurantes-5",
+          "nome": "Sofia Vigilância",
+          "status": "trabalhando",
+          "tarefa": "Tarefa de exemplo em andamento",
+          "atualizadoEm": "2026-10-31T17:00:00-03:00"
+        },
+        {
+          "id": "restaurantes-6",
+          "nome": "Aurora Fotografia",
+          "status": "esperando",
+          "tarefa": "Aguardando aprovação (exemplo)",
+          "atualizadoEm": "2026-10-31T17:00:00-03:00"
+        }
+      ]
+    },
+    {
+      "id": "juridico",
+      "nome": "Jurídico",
+      "descricao": "Departamento jurídico",
+      "cor": "#3a8f6b",
+      "agentes": [
+        {
+          "id": "juridico-1",
+          "nome": "Jéssica Advogada Geral",
+          "status": "trabalhando",
+          "tarefa": "Tarefa de exemplo em andamento",
+          "atualizadoEm": "2026-10-31T17:00:00-03:00"
+        },
+        {
+          "id": "juridico-2",
+          "nome": "Clara Jurisprudência",
+          "status": "trabalhando",
+          "tarefa": "Tarefa de exemplo em andamento",
+          "atualizadoEm": "2026-10-31T17:00:00-03:00"
+        },
+        {
+          "id": "juridico-3",
+          "nome": "Marina Revisão",
+          "status": "esperando",
+          "tarefa": "Aguardando aprovação (exemplo)",
+          "atualizadoEm": "2026-10-31T17:00:00-03:00"
+        },
+        {
+          "id": "juridico-4",
+          "nome": "Bruno Petições",
+          "status": "esperando",
+          "tarefa": "Aguardando aprovação (exemplo)",
+          "atualizadoEm": "2026-10-31T17:00:00-03:00"
+        },
+        {
+          "id": "juridico-5",
+          "nome": "Rafael Prazos",
+          "status": "esperando",
+          "tarefa": "Aguardando aprovação (exemplo)",
+          "atualizadoEm": "2026-10-31T17:00:00-03:00"
+        }
+      ]
+    },
+    {
+      "id": "domma",
+      "nome": "Domma",
+      "descricao": "Sistemas",
+      "cor": "#2f7fd0",
+      "agentes": [
+        {
+          "id": "domma-1",
+          "nome": "Rodrigo Programador",
+          "status": "trabalhando",
+          "tarefa": "Tarefa de exemplo em andamento",
+          "atualizadoEm": "2026-10-31T17:00:00-03:00"
+        },
+        {
+          "id": "domma-2",
+          "nome": "Joaquim Marketing",
+          "status": "esperando",
+          "tarefa": "Aguardando aprovação (exemplo)",
+          "atualizadoEm": "2026-10-31T17:00:00-03:00"
+        },
+        {
+          "id": "domma-3",
+          "nome": "Caetano Tendências",
+          "status": "esperando",
+          "tarefa": "Aguardando aprovação (exemplo)",
+          "atualizadoEm": "2026-10-31T17:00:00-03:00"
+        }
+      ]
+    }
+  ]
+}

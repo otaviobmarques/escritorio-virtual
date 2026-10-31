@@ -1,0 +1,10 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Escritório Virtual 3D — Modo jogo</title><style>
+html,body{margin:0;height:100%;overflow:hidden;font-family:monospace;color:#fff}
+#v{position:fixed;inset:0}#v .ctl-camera{bottom:16px}
+header{position:fixed;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:.6rem 1rem;z-index:2;flex-wrap:wrap;gap:.5rem;background:linear-gradient(90deg,#ff3d81,#7b5cff);text-shadow:2px 2px 0 #000}
+h1{margin:0;font-size:1.1rem}.selo{background:#ffd84d;color:#000;font-weight:bold;padding:.35rem .7rem;border:3px solid #000;box-shadow:3px 3px 0 #000}
+.leg{font-size:.8rem}.leg i{display:inline-block;width:10px;height:10px;margin:0 4px 0 10px;border-radius:0}
+</style></head><body><div id="v"></div>
+<header><h1>Escritório Virtual · Modo jogo</h1><span class="leg"><i style="background:#39ff6a"></i>Trabalhando<i style="background:#9a9ab0"></i>Parado<i style="background:#ffb000"></i>Esperando</span><span class="selo" role="status">Dados de exemplo</span></header>
+<script type="module">import{iniciar}from"./src/cena3d.js";iniciar("jogo",document.getElementById("v"));</script></body></html>

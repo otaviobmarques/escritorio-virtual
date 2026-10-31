@@ -1,0 +1,19 @@
+*{box-sizing:border-box}body{margin:0;background:#1b1d2b;color:#e8e6f0;font-family:"Courier New",monospace}
+header{display:flex;justify-content:space-between;align-items:center;gap:1rem;padding:1rem 1.2rem;background:#26293b;border-bottom:4px solid #11121b;flex-wrap:wrap}
+h1{margin:0;font-size:1.5rem;letter-spacing:2px;color:#ffd84d;text-shadow:3px 3px 0 #000}header p{margin:.2rem 0 0;font-size:.85rem;opacity:.8}
+.selo{background:#ffd84d;color:#1b1d2b;font-weight:bold;padding:.45rem .8rem;border:3px solid #000;box-shadow:3px 3px 0 #000;animation:pisca 2s steps(2) infinite}
+@keyframes pisca{50%{background:#ffb02e}}
+.aviso{margin:.6rem 1.2rem;font-size:.8rem;color:#ffd84d}
+.legenda{display:flex;gap:1rem;flex-wrap:wrap;padding:0 1.2rem;font-size:.85rem}
+.b{display:inline-block;width:12px;height:12px;margin-right:6px;border:2px solid #000;vertical-align:middle}
+.b.trabalhando,.st.trabalhando{background:#4cd964}.b.parado,.st.parado{background:#8e8e9e}.b.esperando,.st.esperando{background:#ffb02e}
+main{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,460px),1fr));gap:1rem;padding:1rem 1.2rem}
+.sala{background:#26293b;border:4px solid #000;box-shadow:5px 5px 0 #000}
+.sala h2{margin:0;padding:.5rem .8rem;font-size:1rem;color:#fff;display:flex;justify-content:space-between;border-bottom:4px solid #000}
+.sala h2 small{font-weight:normal;opacity:.85}
+canvas{display:block;width:100%;image-rendering:pixelated;background:#14151f}
+ul{list-style:none;margin:0;padding:.5rem .8rem;font-size:.78rem;columns:2;column-gap:1rem}
+li{margin:.15rem 0;break-inside:avoid}.st{display:inline-block;width:8px;height:8px;margin-right:5px;border:1px solid #000}
+footer{text-align:center;font-size:.75rem;opacity:.6;padding:1rem}
+@media (max-width:520px){ul{columns:1}h1{font-size:1.2rem}}
+@media (prefers-reduced-motion:reduce){.selo{animation:none}}

@@ -1,0 +1,33 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Escritório Virtual — Demo de animação</title><style>
+html,body{margin:0;height:100%;font-family:Georgia,serif;color:#2b2b2b;background:#e9e6e1}
+body{display:flex;flex-direction:column}
+header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem;padding:.6rem 1rem;background:#fbfaf8;border-bottom:1px solid #d6cfc5}
+h1{margin:0;font-size:1.1rem}.selo{border:1px solid #8a7a5c;color:#6b5a3a;padding:.3rem .7rem;letter-spacing:1px;text-transform:uppercase;font-size:.75rem;background:#fff}
+.painel{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center;padding:.6rem 1rem;background:#f4f1ec;border-bottom:1px solid #d6cfc5}
+.painel button,.painel select{font:inherit;font-size:.9rem;padding:.45rem .8rem;border:1px solid #b9b1a6;background:#fff;cursor:pointer;border-radius:4px}
+.painel button:hover,.painel button:focus-visible{background:#2f3540;color:#fff;outline:2px solid #b08a3e}
+#v{flex:1;min-height:320px;position:relative}
+small{opacity:.7}
+</style></head><body>
+<header><h1>Escritório Virtual · Demo de animação</h1><span class="selo" role="status">Dados de exemplo</span></header>
+<div class="painel" role="toolbar" aria-label="Ações do agente">
+  <label>Agente <select id="ag"></select></label>
+  <button data-a="andar">🚶 Andar</button><button data-a="sentar">🪑 Sentar</button><button data-a="levantar">⬆ Levantar</button>
+  <button data-a="digitar">⌨ Digitar</button><button data-a="gesticular">👋 Gesticular</button><button data-a="levarPasta">📁 Levar pasta ao colega</button>
+  <small>Arraste para mover · roda/pinça para zoom · duplo clique volta</small>
+</div>
+<div id="v"></div>
+<script type="module">
+import { iniciar } from "./src/cena3d.js";
+const cena = await iniciar("executivo", document.getElementById("v"), { semMudancas: true });
+const redbox = cena.dados.setores.find(s => s.id === "redbox").agentes;
+const sel = document.getElementById("ag");
+for (const a of redbox) sel.add(new Option(a.nome, a.id));
+cena.focar("redbox", innerWidth < 600 ? 3.6 : 2.6, -3);
+function colega(id) { const i = redbox.findIndex(a => a.id === id); return redbox[i % 4 === 3 || i === redbox.length - 1 ? i - 1 : i + 1].id; }
+function disparar(acao) { const id = sel.value; acao === "levarPasta" ? cena.acoes.levarPasta(id, colega(id)) : cena.acoes[acao](id); }
+document.querySelectorAll("[data-a]").forEach(b => b.onclick = () => disparar(b.dataset.a));
+// ?acao=... dispara automaticamente (usado nas capturas)
+const q = new URLSearchParams(location.search).get("acao"); if (q === "sentar") { cena.acoes.levantar(sel.value); setTimeout(() => disparar("sentar"), 900); } else if (q) setTimeout(() => disparar(q), 300);
+</script></body></html>
