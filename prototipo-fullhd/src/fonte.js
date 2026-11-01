@@ -1,12 +1,14 @@
 // Fontes de status do protótipo. Contrato de entrada: {nome, sala, status} — só esses 3 campos são usados.
 const NOME_OK = /^[A-Za-zÀ-ÿ' .-]{1,60}$/;
+const FUNCAO_OK = /^[0-9A-Za-zÀ-ÿ' .,&/-]{1,40}$/;
 const TESTES = ["trabalhando", "parado", "esperando", "misto"]; // lista fechada (sem URL livre)
 
 export function validar(lista, cfg) {
   const salas = new Set(cfg.salas.map(s => s.nome)), st = new Set(cfg.status), out = [];
   for (const a of Array.isArray(lista) ? lista : []) {
     if (!a || typeof a.nome !== "string" || !NOME_OK.test(a.nome) || !salas.has(a.sala)) continue;
-    out.push({ nome: a.nome.trim(), sala: a.sala, status: st.has(a.status) ? a.status : "parado" });
+    const funcao = typeof a.funcao === "string" && FUNCAO_OK.test(a.funcao) ? a.funcao.trim() : "";
+    out.push({ nome: a.nome.trim(), sala: a.sala, status: st.has(a.status) ? a.status : "parado", funcao });
   }
   return out;
 }

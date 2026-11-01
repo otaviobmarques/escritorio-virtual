@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Junta os arquivos de status (um por agente) num status.json público.
 
-Entrada: PASTA/<qualquer-nome>.json com EXATAMENTE {"nome": str, "sala": str, "status": str}
-Saída:   {"agentes": [{"nome","sala","status"}, ...]}  — nada além disso.
+Entrada: PASTA/<qualquer-nome>.json com EXATAMENTE {"nome", "sala", "status"} e, opcional, "funcao" (texto curto)
+Saída:   {"agentes": [{"nome","sala","status"[,"funcao"]}, ...]}  — nada além disso.
 Regra:   arquivo sem atualização (mtime) há mais de LIMITE minutos => status "parado".
 Uso:     python3 scripts/gerar-status.py [--pasta DIR] [--saida ARQ] [--limite-min 10]
          (variáveis: EV_STATUS_DIR, EV_SAIDA, EV_LIMITE_MIN)
@@ -11,6 +11,7 @@ import argparse, json, os, re, sys, time, tempfile
 
 SALAS = {"RedBox", "Vértice", "Restaurantes", "Jurídico", "Domma"}
 STATUS = {"trabalhando", "parado", "esperando"}
+FUNCAO_OK = re.compile(r"^[0-9A-Za-zÀ-ÿ' .,&/-]{1,40}$")  # função curta (trecho do nome após "·"), nunca a description
 NOME_OK = re.compile(r"^[A-Za-zÀ-ÿ' .-]{1,60}$")  # só letras/espaços: impede vazar tokens, e-mails, URLs
 MAX_BYTES = 1024
 
@@ -22,11 +23,15 @@ def ler(caminho, limite_s, agora):
         d = json.load(open(caminho, encoding="utf-8"))
     except (ValueError, OSError):
         return None
-    if not isinstance(d, dict) or set(d) != {"nome", "sala", "status"}: return None  # campo extra => rejeita
+    if not isinstance(d, dict) or set(d) - {"funcao"} != {"nome", "sala", "status"}: return None  # campo extra => rejeita
+    funcao = d.get("funcao")
+    if funcao is not None and not (isinstance(funcao, str) and FUNCAO_OK.match(funcao)): return None
     nome, sala, status = d["nome"], d["sala"], d["status"]
     if not (isinstance(nome, str) and NOME_OK.match(nome) and sala in SALAS and status in STATUS): return None
     if agora - st.st_mtime > limite_s: status = "parado"
-    return {"nome": nome.strip(), "sala": sala, "status": status}
+    out = {"nome": nome.strip(), "sala": sala, "status": status}
+    if funcao: out["funcao"] = funcao.strip()
+    return out
 
 def main():
     ap = argparse.ArgumentParser()

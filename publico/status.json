@@ -3,287 +3,344 @@
   {
    "nome": "Augusto",
    "sala": "Domma",
-   "status": "parado"
+   "status": "parado",
+   "funcao": "Qualidade e Testes Domma"
   },
   {
    "nome": "Caetano",
    "sala": "Domma",
-   "status": "parado"
+   "status": "parado",
+   "funcao": "Tendências Domma"
   },
   {
    "nome": "Fabrício",
    "sala": "Domma",
-   "status": "parado"
+   "status": "parado",
+   "funcao": "Programador Editor de Fotos"
   },
   {
    "nome": "Heloísa",
    "sala": "Domma",
-   "status": "parado"
+   "status": "parado",
+   "funcao": "Qualidade e Testes Domma"
   },
   {
    "nome": "Henrique",
    "sala": "Domma",
-   "status": "parado"
+   "status": "parado",
+   "funcao": "Programador Agente WhatsApp"
   },
   {
    "nome": "Igor",
    "sala": "Domma",
-   "status": "parado"
+   "status": "trabalhando",
+   "funcao": "Programador Escritório Virtual"
   },
   {
    "nome": "Joaquim",
    "sala": "Domma",
-   "status": "parado"
+   "status": "parado",
+   "funcao": "Marketing Domma"
   },
   {
    "nome": "Leonardo",
    "sala": "Domma",
-   "status": "parado"
+   "status": "parado",
+   "funcao": "Programador Agente de Voz"
   },
   {
    "nome": "Lorena",
    "sala": "Domma",
-   "status": "parado"
+   "status": "parado",
+   "funcao": "Design de Interface Domma"
   },
   {
    "nome": "Matilde",
    "sala": "Domma",
-   "status": "parado"
+   "status": "parado",
+   "funcao": "Design de Interface Domma"
   },
   {
    "nome": "Nícolas",
    "sala": "Domma",
-   "status": "parado"
+   "status": "parado",
+   "funcao": "Programador App de Calorias"
   },
   {
    "nome": "Otília",
    "sala": "Domma",
-   "status": "parado"
+   "status": "parado",
+   "funcao": "Programadora Agendador"
   },
   {
    "nome": "Rodrigo",
    "sala": "Domma",
-   "status": "parado"
+   "status": "parado",
+   "funcao": "Programador"
   },
   {
    "nome": "Sabrina",
    "sala": "Domma",
-   "status": "parado"
+   "status": "parado",
+   "funcao": "Suporte e Implantação Domma"
   },
   {
    "nome": "Severino",
    "sala": "Domma",
-   "status": "parado"
+   "status": "parado",
+   "funcao": "Consultor GitHub Domma"
   },
   {
    "nome": "Teodoro",
    "sala": "Domma",
-   "status": "parado"
+   "status": "parado",
+   "funcao": "Programador Monitor IA"
   },
   {
    "nome": "Tobias",
    "sala": "Domma",
-   "status": "parado"
+   "status": "parado",
+   "funcao": "Programador Sistema de Viagens"
   },
   {
    "nome": "Valéria",
    "sala": "Domma",
-   "status": "parado"
+   "status": "parado",
+   "funcao": "Programadora Vídeos UGC"
   },
   {
    "nome": "Bruno",
    "sala": "Jurídico",
-   "status": "parado"
+   "status": "parado",
+   "funcao": "Redação de Petições"
   },
   {
    "nome": "Clara",
    "sala": "Jurídico",
-   "status": "parado"
+   "status": "parado",
+   "funcao": "Pesquisa de Jurisprudência"
   },
   {
    "nome": "Jéssica",
    "sala": "Jurídico",
-   "status": "parado"
+   "status": "esperando",
+   "funcao": "Advogada Geral"
   },
   {
    "nome": "Marina",
    "sala": "Jurídico",
-   "status": "parado"
+   "status": "parado",
+   "funcao": "Revisão Jurídica"
   },
   {
    "nome": "Rafael",
    "sala": "Jurídico",
-   "status": "parado"
+   "status": "parado",
+   "funcao": "Prazos"
   },
   {
    "nome": "Andreia",
    "sala": "RedBox",
-   "status": "parado"
+   "status": "parado",
+   "funcao": "Tráfego Pago Sênior"
   },
   {
    "nome": "Beatriz",
    "sala": "RedBox",
-   "status": "parado"
+   "status": "parado",
+   "funcao": "Atendimento ao Cliente"
   },
   {
    "nome": "Caio",
    "sala": "RedBox",
-   "status": "parado"
+   "status": "trabalhando",
+   "funcao": "Coordenador da RedBox"
   },
   {
    "nome": "Fernando",
    "sala": "RedBox",
-   "status": "parado"
+   "status": "parado",
+   "funcao": "Analista de Métricas"
   },
   {
    "nome": "Gabriel",
    "sala": "RedBox",
-   "status": "parado"
+   "status": "parado",
+   "funcao": "Designer ChatGPT"
   },
   {
    "nome": "Helena",
    "sala": "RedBox",
-   "status": "parado"
+   "status": "parado",
+   "funcao": "Compliance"
   },
   {
    "nome": "Henriquiano",
    "sala": "RedBox",
-   "status": "parado"
+   "status": "parado",
+   "funcao": "Designer Consultor"
   },
   {
    "nome": "Julia",
    "sala": "RedBox",
-   "status": "parado"
+   "status": "parado",
+   "funcao": "Designer"
   },
   {
    "nome": "Lucas",
    "sala": "RedBox",
-   "status": "parado"
+   "status": "parado",
+   "funcao": "Landing Page e Conversão"
   },
   {
    "nome": "Marcos",
    "sala": "RedBox",
-   "status": "parado"
+   "status": "parado",
+   "funcao": "Copy"
   },
   {
    "nome": "Otávia",
    "sala": "RedBox",
-   "status": "parado"
+   "status": "parado",
+   "funcao": "Analista de SEO"
   },
   {
    "nome": "Pedro",
    "sala": "RedBox",
-   "status": "parado"
+   "status": "parado",
+   "funcao": "Criador de Vídeos"
   },
   {
    "nome": "Renato",
    "sala": "RedBox",
-   "status": "parado"
+   "status": "parado",
+   "funcao": "Planejamento"
   },
   {
    "nome": "Sérgio",
    "sala": "RedBox",
-   "status": "parado"
+   "status": "parado",
+   "funcao": "Saldo das Contas"
   },
   {
    "nome": "Vitor",
    "sala": "RedBox",
-   "status": "parado"
+   "status": "parado",
+   "funcao": "Mensuração"
   },
   {
    "nome": "Aurora",
    "sala": "Restaurantes",
-   "status": "parado"
+   "status": "parado",
+   "funcao": "Fotografia Culinária"
   },
   {
    "nome": "Camila",
    "sala": "Restaurantes",
-   "status": "parado"
+   "status": "parado",
+   "funcao": "Cardápio e Precificação"
   },
   {
    "nome": "Diego",
    "sala": "Restaurantes",
-   "status": "parado"
+   "status": "parado",
+   "funcao": "iFood e Métricas"
   },
   {
    "nome": "Rogério",
    "sala": "Restaurantes",
-   "status": "parado"
+   "status": "parado",
+   "funcao": "Compras e Custos"
   },
   {
    "nome": "Sofia",
    "sala": "Restaurantes",
-   "status": "parado"
+   "status": "parado",
+   "funcao": "Vigilância Sanitária"
   },
   {
    "nome": "Wesley",
    "sala": "Restaurantes",
-   "status": "parado"
+   "status": "parado",
+   "funcao": "Coordenador dos Restaurantes"
   },
   {
    "nome": "Aurélia",
    "sala": "Vértice",
-   "status": "parado"
+   "status": "parado",
+   "funcao": "Narração Vértice"
   },
   {
    "nome": "Benício",
    "sala": "Vértice",
-   "status": "parado"
+   "status": "parado",
+   "funcao": "Som Vértice"
   },
   {
    "nome": "Bernardo",
    "sala": "Vértice",
-   "status": "parado"
+   "status": "parado",
+   "funcao": "Diretor de Cenas Vértice"
   },
   {
    "nome": "Cecília",
    "sala": "Vértice",
-   "status": "parado"
+   "status": "parado",
+   "funcao": "Coordenação Vértice"
   },
   {
    "nome": "Celeste",
    "sala": "Vértice",
-   "status": "parado"
+   "status": "parado",
+   "funcao": "Banco de Imagem Vértice"
   },
   {
    "nome": "Heitor",
    "sala": "Vértice",
-   "status": "parado"
+   "status": "parado",
+   "funcao": "Roteirista Vértice"
   },
   {
    "nome": "Lis",
    "sala": "Vértice",
-   "status": "parado"
+   "status": "parado",
+   "funcao": "Shorts Vértice"
   },
   {
    "nome": "Lorenzo",
    "sala": "Vértice",
-   "status": "parado"
+   "status": "parado",
+   "funcao": "Edição Vértice"
   },
   {
    "nome": "Maycon",
    "sala": "Vértice",
-   "status": "parado"
+   "status": "parado",
+   "funcao": "Coordenador da Vértice"
   },
   {
    "nome": "Valentina",
    "sala": "Vértice",
-   "status": "parado"
+   "status": "parado",
+   "funcao": "Pauta Vértice"
   },
   {
    "nome": "Vicente",
    "sala": "Vértice",
-   "status": "parado"
+   "status": "parado",
+   "funcao": "Thumbnail Vértice"
   },
   {
    "nome": "Ícaro",
    "sala": "Vértice",
-   "status": "parado"
+   "status": "parado",
+   "funcao": "Motion Vértice"
   },
   {
    "nome": "Ísis",
    "sala": "Vértice",
-   "status": "parado"
+   "status": "parado",
+   "funcao": "Revisão Final Vértice"
   }
  ]
 }

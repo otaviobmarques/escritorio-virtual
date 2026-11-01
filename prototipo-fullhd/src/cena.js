@@ -4,7 +4,7 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import * as SkeletonUtils from "three/addons/utils/SkeletonUtils.js";
 import { RoomEnvironment } from "three/addons/RoomEnvironment.js";
-import { criarFonte, carregarPrivado } from "./fonte.js";
+import { criarFonte, carregarPrivado } from "./fonte.js?v=6";
 
 const params = new URLSearchParams(location.search);
 const BASE = new URL("../", import.meta.url); // pasta prototipo-fullhd/, funciona de qualquer página que importe este módulo
@@ -237,8 +237,8 @@ async function abrirPainel(sel) {
   const pessoas = listaAtual.filter(a => a.sala === sel.sala && (!sel.nome || a.nome === sel.nome));
   const h = document.createElement("div");
   const tit = document.createElement("h2"); tit.textContent = sel.nome ? sel.nome : sel.sala; h.append(tit);
-  const sub = document.createElement("p"); sub.className = "sub"; sub.textContent = sel.nome ? `Sala ${sel.sala}` : `${pessoas.length} agente(s)`; h.append(sub);
-  if (!privado) { const p = document.createElement("p"); p.className = "nota"; p.textContent = "Versão pública: só nome, sala e status. Projeto e tarefa aparecem apenas no modo privado local."; h.append(p); }
+  const sub = document.createElement("p"); sub.className = "sub"; sub.textContent = sel.nome ? `${pessoas[0]?.funcao ? pessoas[0].funcao + " · " : ""}Sala ${sel.sala}` : `${pessoas.length} agente(s)`; h.append(sub);
+  if (!privado) { const p = document.createElement("p"); p.className = "nota"; p.textContent = "Versão pública: nome, função, sala e status. Projeto e tarefa aparecem apenas no modo privado local."; h.append(p); }
   else if (!dadosPriv) { const p = document.createElement("p"); p.className = "nota"; p.textContent = "Modo privado indisponível aqui (o arquivo privado só é servido pelo servidor local)."; h.append(p); }
   const ul = document.createElement("ul");
   for (const a of pessoas) {
@@ -272,6 +272,7 @@ function enquadrar() {
 }
 let eraCel = celular();
 addEventListener("resize", () => { if (vista === "lista") { desenharLista(); return; } if (celular() !== eraCel) { eraCel = celular(); if (eraCel && foco === "todas") foco = null; agentes.clear(); montar(listaAtual); return; } enquadrar(); });
+new ResizeObserver(() => { if (vista !== "lista" && !modoQuad()) enquadrar(); }).observe(palco);
 const toques = new Map(); let arr = null;
 r.domElement.addEventListener("pointerdown", e => { toques.set(e.pointerId, e); arr = { x: e.clientX, y: e.clientY }; r.domElement.setPointerCapture(e.pointerId); });
 r.domElement.addEventListener("pointermove", e => {
@@ -453,29 +454,38 @@ async function desenharMenu() {
       const li = document.createElement("li"); const b = document.createElement("button"); b.type = "button"; b.className = "m-pessoa";
       const n = document.createElement("span"); n.className = "m-nome"; n.textContent = a.nome;
       const st = document.createElement("span"); st.className = "m-st"; const i = document.createElement("i"); i.className = "b " + a.status; i.setAttribute("aria-hidden", "true"); st.append(i, document.createTextNode(ROT_ST[a.status]));
-      b.append(n, st); let rotulo = `${a.nome}, sala ${a.sala}, ${ROT_ST[a.status]}`;
+      b.append(n); let rotulo = `${a.nome}, sala ${a.sala}`;
+      { const fp = document.createElement("span"); fp.className = "m-fun"; fp.textContent = a.funcao || "função não informada"; b.append(fp); rotulo += `, ${fp.textContent}`; }
+      b.append(st); rotulo += `, ${ROT_ST[a.status]}`;
       if (privado && dadosPriv) { // função e tarefa SÓ no modo privado local
         const pv = priv.get(a.sala + "|" + a.nome);
-        const fn = document.createElement("span"); fn.className = "m-det"; fn.textContent = "Função: " + (pv?.funcao || "sem função registrada");
         const tf = document.createElement("span"); tf.className = "m-det"; const tar = semInfo(pv?.tarefa) ? "sem tarefa registrada" : pv.tarefa, prj = semInfo(pv?.projeto) ? "" : ` (${pv.projeto})`;
-        tf.textContent = "Fazendo: " + tar + prj; b.append(fn, tf); rotulo += `. ${fn.textContent}. ${tf.textContent}`;
+        tf.textContent = "Fazendo: " + tar + prj; b.append(tf); rotulo += `. ${tf.textContent}`;
       }
-      b.setAttribute("aria-label", rotulo); b.onclick = () => { fecharMenu(false); abrirPainel({ sala: a.sala, nome: a.nome }); };
+      b.setAttribute("aria-label", rotulo); b.onclick = () => { if (celular()) fecharMenu(false); destacar(a); abrirPainel({ sala: a.sala, nome: a.nome }); };
       li.append(b); ul.append(li);
     }
     sec.append(ul); frag.append(sec);
   }
   if (!total) { const p = document.createElement("p"); p.className = "nota"; p.textContent = "Nenhum agente com esse nome."; frag.append(p); }
   lista.replaceChildren(frag);
-  document.getElementById("menu-nota").textContent = privado ? (dadosPriv ? "Modo privado local: função (título do perfil) e tarefa registrada pelo próprio agente." : "Modo privado indisponível aqui.") : "Versão pública: só nome, sala e status.";
+  document.getElementById("menu-nota").textContent = privado ? (dadosPriv ? "Modo privado local: função (título do perfil) e tarefa registrada pelo próprio agente." : "Modo privado indisponível aqui.") : "Versão pública: nome, função, sala e status.";
 }
-function abrirMenu() { menu.hidden = false; menu.classList.add("aberto"); btnMenu.setAttribute("aria-expanded", "true"); desenharMenu(); document.getElementById("menu-busca").focus(); }
+function destacar(a) { // PC: realça a pessoa na cena (rótulo pulsando)
+  const ag = agentes.get(a.sala + "|" + a.nome); if (!ag) return;
+  for (const x of agentes.values()) x.rot.classList.remove("destaque");
+  ag.rot.classList.add("destaque"); clearTimeout(destacar.t); destacar.t = setTimeout(() => ag.rot.classList.remove("destaque"), 6000);
+}
+function modoDialogo() { // celular: menu sobreposto (diálogo modal); PC: painel lateral fixo à direita que encolhe a cena
+  if (celular()) { menu.setAttribute("role", "dialog"); menu.setAttribute("aria-modal", "true"); } else { menu.setAttribute("role", "complementary"); menu.removeAttribute("aria-modal"); }
+}
+function abrirMenu() { modoDialogo(); menu.hidden = false; menu.classList.add("aberto"); btnMenu.setAttribute("aria-expanded", "true"); desenharMenu(); document.getElementById("menu-busca").focus(); }
 function fecharMenu(devolverFoco = true) { menu.hidden = true; menu.classList.remove("aberto"); btnMenu.setAttribute("aria-expanded", "false"); if (devolverFoco) btnMenu.focus(); }
 btnMenu.onclick = () => menu.hidden ? abrirMenu() : fecharMenu();
 document.getElementById("menu-fechar").onclick = () => fecharMenu();
 document.getElementById("menu-busca").addEventListener("input", e => { menuFiltro = e.target.value; desenharMenu(); });
-menu.addEventListener("keydown", e => { // mantém o foco dentro do menu
-  if (e.key !== "Tab") return; const f = [...menu.querySelectorAll("button,input")].filter(x => x.offsetParent); if (!f.length) return;
+menu.addEventListener("keydown", e => { // mantém o foco dentro do menu (só no celular, onde ele é modal)
+  if (e.key !== "Tab" || !celular()) return; const f = [...menu.querySelectorAll("button,input")].filter(x => x.offsetParent); if (!f.length) return;
   if (e.shiftKey && document.activeElement === f[0]) { e.preventDefault(); f.at(-1).focus(); } else if (!e.shiftKey && document.activeElement === f.at(-1)) { e.preventDefault(); f[0].focus(); } });
 
 // ---------- quadrante expandido (celular): ?sala=X, Voltar, Esc e voltar do navegador ----------
@@ -490,7 +500,7 @@ function trocarSala(id) { const u = new URL(location.href); if (id) u.searchPara
 addEventListener("popstate", () => { const id = new URLSearchParams(location.search).get("sala"); if (vista !== "lista") return; if (id && salas.has(id)) { foco = id; criarAbas(); desenharLista(); } else voltarQuadrantes(true); });
 addEventListener("keydown", e => {
   if (e.key !== "Escape") return;
-  if (!menu.hidden) { fecharMenu(); return; }
+  if (!menu.hidden && (celular() || menu.contains(document.activeElement))) { fecharMenu(); return; }
   if (!painel.hidden) { painel.hidden = true; painelAberto = null; return; }
   if (modoQuad() && foco !== "todas") voltarQuadrantes(false);
 });

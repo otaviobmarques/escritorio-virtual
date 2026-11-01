@@ -21,7 +21,7 @@ As trocas de status tocam a transição real do clipe (sentar ou levantar, cerca
 - Cores das salas vêm dos logotipos reais; sem logotipo ou cores parecidas (distância < 25 em Lab), a sala usa cor neutra.
 
 ## Requisitos (atendidos no protótipo)
-- O contrato de entrada continua `{nome, sala, status}`. Campos a mais são descartados no navegador.
+- O contrato de entrada continua `{nome, sala, status[, funcao]}`. Campos a mais são descartados no navegador.
 - O padrão é o status real em `publico/status.json`; `?fonte=exemplo` usa `dados/exemplo.json`. `?teste=trabalhando|parado|esperando|misto` lê arquivos de teste locais de uma lista fechada.
 - O layout vem de `prototipo-fullhd/config/escritorio.json`: salas, cores, colunas, áreas extras e regras do celular. Há uma mesa por agente.
 - Os rótulos são HTML, presos às bordas da tela, e não se sobrepõem: em colisão sobem ou são ocultados (o nome segue na lista e no painel). Também são clicáveis.
@@ -56,3 +56,6 @@ Medições da versão celular com mini-cenas: ver ADR-0011.
 - Ter mais de um modelo de pessoa CC0 para dar variedade.
 - Medir desempenho num PC com GPU.
 - Sobreposição de rótulos em salas cheias no celular.
+
+## Painel lateral no PC e função pública (01/11/2026)
+Ver ADR-0010, adendo 2. Público: nome, sala, status e função curta (trecho do nome após "·"). Tarefa/projeto: só no modo privado.
