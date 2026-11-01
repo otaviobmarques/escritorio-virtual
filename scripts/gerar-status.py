@@ -30,7 +30,7 @@ def ler(caminho, limite_s, agora):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--pasta", default=os.environ.get("EV_STATUS_DIR", "/home/box/escritorio-virtual-status"))
+    ap.add_argument("--pasta", default=os.environ.get("EV_STATUS_DIR", os.environ.get("STATUS_DIR", "./status")))
     ap.add_argument("--saida", default=os.environ.get("EV_SAIDA", os.path.join(os.path.dirname(__file__), "..", "publico", "status.json")))
     ap.add_argument("--limite-min", type=float, default=float(os.environ.get("EV_LIMITE_MIN", 10)))
     a = ap.parse_args()

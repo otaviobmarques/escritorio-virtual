@@ -1,12 +1,12 @@
 # Fonte de produção: arquivos de status (local)
 
-> Implementado e testado só com pasta temporária. **Nenhum agente foi configurado para escrever, nada foi publicado.**
+> Implementado e testado só localmente. **Nenhum agente foi configurado para escrever, nada foi publicado.**
 
 ## Pasta e formato
-- Pasta: `/home/box/escritorio-virtual-status/` (mude com `EV_STATUS_DIR`).
+- Pasta: `./status/` (padrão; mude com `EV_STATUS_DIR`).
 - Um arquivo por agente, `<slug-do-nome>.json`, até 1 KB, **exatamente** estes campos:
 ```json
-{"nome": "Caio Coordenador", "sala": "RedBox", "status": "trabalhando"}
+{"nome": "Agente Exemplo", "sala": "RedBox", "status": "trabalhando"}
 ```
 - `sala` ∈ `RedBox`, `Vértice`, `Restaurantes`, `Jurídico`, `Domma`.
 - `status` ∈ `trabalhando`, `parado`, `esperando`.
@@ -16,7 +16,7 @@
 
 ## Como cada agente escreve
 ```bash
-scripts/escrever-status.sh "Caio Coordenador" RedBox trabalhando
+scripts/escrever-status.sh "Agente Exemplo" RedBox trabalhando
 ```
 (escrita atômica: grava temporário e renomeia.)
 
@@ -36,4 +36,4 @@ Saída: `{"agentes":[{"nome","sala","status"}]}` — nada além disso (sem horá
 - Real: `http://127.0.0.1:3200/?fonte=arquivos` (também nas páginas 3D). O selo muda para "Status real (arquivos)". O navegador relê o `status.json` a cada 30 s.
 
 ## Teste feito
-Pasta temporária com 4 arquivos: 2 válidos → mantidos; 1 com mais de 11 min → `parado`; 1 com campo extra `token` → ignorado.
+Pasta de teste com 4 arquivos: 2 válidos → mantidos; 1 com mais de 11 min → `parado`; 1 com campo extra `token` → ignorado.

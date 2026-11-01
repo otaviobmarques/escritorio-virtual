@@ -11,7 +11,7 @@
       "agentes": [
         {
           "id": "redbox-1",
-          "nome": "Caio Coordenador",
+          "nome": "Agente Exemplo",
           "status": "parado",
           "tarefa": "Sem tarefa (exemplo)",
           "atualizadoEm": "2026-10-31T17:00:00-03:00"

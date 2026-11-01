@@ -54,7 +54,7 @@ Com dezenas de agentes em vários negócios, não há uma visão rápida e agrad
   "setores": [{
     "id": "redbox", "nome": "RedBox", "descricao": "Agência", "cor": "#d64545",
     "agentes": [{
-      "id": "redbox-1", "nome": "Caio Coordenador",
+      "id": "redbox-1", "nome": "Agente Exemplo",
       "status": "trabalhando | parado | esperando",
       "tarefa": "rótulo curto", "atualizadoEm": "ISO 8601"
     }]

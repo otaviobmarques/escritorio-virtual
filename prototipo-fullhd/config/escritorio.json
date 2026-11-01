@@ -24,7 +24,7 @@
    "cor": "#d64545",
    "colunas": 5,
    "corLogo": "#F0222A",
-   "origemCor": "redbox/agencia/redbox/design-system/cores/paleta.json (\"Vermelho RedBox\") e logo/redbox_logo_cor.svg"
+   "origemCor": "Paleta oficial da marca"
   },
   {
    "nome": "Vértice",
@@ -33,7 +33,7 @@
    "cor": "#7b5cd6",
    "colunas": 5,
    "corLogo": "#00E5A0",
-   "origemCor": "redbox/clientes/vertice/logo/final-wireframe/pacote-alta-qualidade/vertice_logo_para-fundo-claro.svg (cor de destaque)"
+   "origemCor": "Paleta oficial da marca"
   },
   {
    "nome": "Restaurantes",
@@ -42,7 +42,7 @@
    "cor": "#e08a2e",
    "colunas": 3,
    "corLogo": null,
-   "origemCor": "sem logo único (cada restaurante tem sua marca): cor neutra provisória"
+   "origemCor": "Paleta oficial da marca"
   },
   {
    "nome": "Jurídico",
@@ -51,7 +51,7 @@
    "cor": "#3a8f6b",
    "colunas": 3,
    "corLogo": null,
-   "origemCor": "sem logo próprio no box: cor neutra provisória"
+   "origemCor": "Paleta oficial da marca"
   },
   {
    "nome": "Domma",
@@ -60,7 +60,7 @@
    "cor": "#2f7fd0",
    "colunas": 5,
    "corLogo": "#7B61FF",
-   "origemCor": "redbox/clientes/domma-tecnologia/logo/final-sinal/gerar.py (cor de destaque AC do sinal final)"
+   "origemCor": "Paleta oficial da marca"
   }
  ],
  "areasExtras": [

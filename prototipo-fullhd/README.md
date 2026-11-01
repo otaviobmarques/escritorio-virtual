@@ -3,7 +3,8 @@ Código do visual Full HD. A página principal do site (`/index.html`) carrega e
 
 ## Rodar
 ```bash
-cd /home/box/domma/escritorio-virtual && python3 -m http.server 3300 --bind 127.0.0.1
+# na raiz do repositório:
+python3 -m http.server 3300 --bind 127.0.0.1
 # público:  http://127.0.0.1:3300/prototipo-fullhd/
 #   padrão = status real (../publico/status.json); ?fonte=exemplo  ?sala=redbox  ?zoom=0.5
 #   ?modo=privado só funciona no servidor privado local (fora do repositório)

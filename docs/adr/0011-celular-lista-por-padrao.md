@@ -15,12 +15,12 @@ No celular a cena isométrica ficava estreita e rótulos apareciam cortados nas 
 - No celular, a lista vira **páginas de 4 quadrantes (grade 2x2)**, uma sala por quadrante. Com mais de 4 salas, a próxima página fica ao lado: rolagem horizontal com `scroll-snap` e indicador de páginas (botões "Ir para a página N", `aria-current`). Com o filtro numa sala só, ela ocupa a página inteira.
 - Cada quadrante tem o nome da sala, a contagem por status (bolinha + número, com `aria-label` "Trabalhando: N") e as pessoas (nome + bolinha + texto do status). Se não couber, há rolagem vertical dentro do quadrante. Tocar na pessoa abre o painel. `?pagina=2` abre direto na página 2.
 - **Cor de cada sala = cor do logotipo real**, com a origem registrada em `prototipo-fullhd/config/escritorio.json` (`corLogo`, `origemCor`):
-  | Sala | Cor | Origem no box |
+  | Sala | Cor | Origem |
   |---|---|---|
-  | RedBox | #F0222A | `redbox/agencia/redbox/design-system/cores/paleta.json` ("Vermelho RedBox") e `logo/redbox_logo_cor.svg` |
-  | Vértice | #00E5A0 | `redbox/clientes/vertice/logo/final-wireframe/pacote-alta-qualidade/vertice_logo_para-fundo-claro.svg` |
-  | Domma | #7B61FF | `redbox/clientes/domma-tecnologia/logo/final-sinal/gerar.py` (destaque do sinal final) |
-  | Jurídico | neutra #8A8580 (provisória) | sem logotipo próprio no box |
+  | RedBox | #F0222A | Paleta oficial da marca |
+  | Vértice | #00E5A0 | Paleta oficial da marca |
+  | Domma | #7B61FF | Paleta oficial da marca |
+  | Jurídico | neutra #8A8580 (provisória) | sem logotipo próprio |
   | Restaurantes | neutra #8A8580 (provisória) | sem logotipo único (cada restaurante tem a sua marca) |
 - **Regra automática de cores parecidas:** se duas salas têm cores de logotipo a menos de 25 de distância CIE76 (espaço Lab), as duas passam a usar a cor neutra. O limite fica em `distanciaMinimaCor` no config. Distâncias atuais: RedBox–Domma 127,3, RedBox–Vértice 141,5 e Domma–Vértice 150,7, então nenhuma colide. Exemplo de colisão: #F0222A × #D3141B dá 8,8.
 - **Contraste:** a cor da marca aparece numa faixa e num fundo suave (10%) atrás do título; o texto continua escuro. Nos rótulos de sala da cena 3D, o texto é preto ou branco, o que tiver mais contraste (WCAG).
@@ -34,19 +34,15 @@ No celular a cena isométrica ficava estreita e rótulos apareciam cortados nas 
   - O pixel ratio fica limitado a 1,5 nesse modo. O laço pausa com a aba oculta (`document.hidden`) e não desenha nada quando a vista não é a de quadrantes.
   - No celular as salas usam 3 colunas (`colunasCelular`), para caberem melhor num quadrante quase quadrado.
 
-### Medição no box (01/11/2026)
-Chrome 156 headless, **sem GPU** (renderização por software SwiftShader), Xeon de 8 núcleos, celular emulado 390x844 com devicePixelRatio 3 (limitado a 1,5 na cena). Janela de 6 s depois de 3 s de aquecimento. O "tempo de quadro" é o tempo de CPU do JavaScript por quadro (animação + chamadas de desenho). Ele não inclui a rasterização por software, que é o que limita os quadros por segundo aqui.
+### Medição (01/11/2026)
+Navegador headless sem GPU (renderização por software), celular emulado 390x844. O "tempo de quadro" é o tempo de CPU do JavaScript por quadro; não inclui a rasterização por software.
 
 | Captura | Quadros/s | Tempo de quadro mediana (ms) | P95 (ms) | Canvas WebGL |
 |---|---|---|---|---|
 | celular-quadrantes-real-p1 | 2.5 | 16.2 | 97.3 | 1 |
 | celular-quadrantes-real-p2 | 5.7 | 6.1 | 9.4 | 1 |
-| celular-quadrantes-teste-misto-p1 | 3.3 | 12.7 | 22.2 | 1 |
-| celular-quadrantes-teste-misto-p2 | 19.7 | 2.1 | 3.6 | 1 |
-| celular-quadrantes-teste-misto-toque | 3.5 | 10.7 | 14.3 | 1 |
-| fullhd-cena-teste-misto | 2.8 | 11.5 | 13.5 | 1 |
 
-Leitura honesta: no box sem placa de vídeo a página 1 (4 salas) roda a cerca de 2,5 a 3,5 quadros/s e a página 2 (1 sala) a 5,7 a 19,7. O custo de CPU por quadro fica entre 2 e 16 ms (mediana), o que cabe em 60 quadros/s. **O desempenho num celular real com GPU não foi medido.** Se ficar pesado, os próximos passos são reduzir a frequência de animação dos quadrantes ou usar um modelo de pessoa mais leve.
+Leitura honesta: sem placa de vídeo a página 1 (4 salas) roda a cerca de 2,5 quadros/s e a página 2 (1 sala) a cerca de 5,7. O custo de CPU por quadro fica entre 2 e 16 ms (mediana), o que cabe em 60 quadros/s. **O desempenho num celular real com GPU não foi medido.** Se ficar pesado, os próximos passos são reduzir a frequência de animação dos quadrantes ou usar um modelo de pessoa mais leve.
 
 ## Consequências
 + Leitura imediata no celular. − Na cena 3D com muitas pessoas, alguns rótulos ficam ocultos até dar zoom.
