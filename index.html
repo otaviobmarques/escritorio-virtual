@@ -6,7 +6,7 @@
 <script type="importmap">{"imports":{"three":"./vendor/three.module.min.js","three/addons/":"./prototipo-fullhd/vendor/addons/"}}</script>
 </head><body>
 <header>
-  <div class="tit"><h1>Escritório Virtual</h1><span class="selo" id="selo">carregando…</span></div>
+  <div class="tit"><button type="button" id="abrir-menu" class="btn-menu" aria-expanded="false" aria-controls="menu">☰ Agentes</button><h1>Escritório Virtual</h1><span class="selo" id="selo">carregando…</span></div>
   <nav class="legenda" aria-label="Contagem por status" aria-live="polite">
     <span><i class="b trabalhando"></i>Trabalhando <b id="c-trabalhando">0</b></span>
     <span><i class="b parado"></i>Parado <b id="c-parado">0</b></span>
@@ -21,6 +21,12 @@
   <p id="carregando">Carregando cena 3D…</p>
 </main>
 <aside id="painel" hidden aria-live="polite"></aside></div>
+<aside id="menu" role="dialog" aria-modal="true" aria-labelledby="menu-tit" hidden>
+  <div class="m-topo"><h2 id="menu-tit">Agentes por sala <button type="button" id="menu-fechar" class="fechar" aria-label="Fechar menu">Fechar ✕</button></h2>
+    <label class="sr" for="menu-busca">Buscar agente por nome</label><input id="menu-busca" type="search" placeholder="Buscar por nome…" autocomplete="off">
+    <p class="nota" id="menu-nota"></p></div>
+  <div id="menu-lista"></div>
+</aside>
 <ul id="lista" class="sr"></ul>
 <script type="module" src="prototipo-fullhd/src/cena.js"></script>
 </body></html>

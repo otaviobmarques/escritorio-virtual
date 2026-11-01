@@ -89,3 +89,29 @@ header{position:sticky;top:0}
 .q-canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2}
 .q-cena{flex:0 0 52%;min-height:0;cursor:pointer;border-bottom:1px solid #eee}
 .q-pessoa{min-height:36px;padding:3px 4px}
+
+/* quadrante expandido (celular) */
+.q-expandir{all:unset;cursor:pointer;font-weight:700;display:block;width:100%}
+.q-expandir:focus-visible{outline:3px solid #1d5fd6;outline-offset:2px}
+.q-voltar{margin:6px 6px 0;align-self:flex-start;font:inherit;font-size:14px;font-weight:600;padding:8px 12px;min-height:40px;border-radius:8px;border:1px solid #222;background:#fff;color:#111;cursor:pointer;position:relative;z-index:3}
+.q-trilho.expandida .q-sala{animation:q-cresce .28s ease-out}
+.q-trilho.expandida .q-cena{flex-basis:62%}
+@keyframes q-cresce{from{transform:scale(.5);opacity:.4}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){.q-trilho.expandida .q-sala{animation:none}}
+/* menu lateral de agentes */
+.btn-menu{font:inherit;font-size:13px;font-weight:600;padding:6px 12px;min-height:36px;border-radius:8px;border:1px solid #222;background:#fff;color:#111;cursor:pointer}
+#menu{position:fixed;top:0;left:0;bottom:0;width:min(380px,92vw);background:#fff;z-index:20;box-shadow:4px 0 18px #0003;display:flex;flex-direction:column}
+#menu.aberto{animation:m-entra .22s ease-out}
+@keyframes m-entra{from{transform:translateX(-100%)}to{transform:none}}
+@media (prefers-reduced-motion:reduce){#menu.aberto{animation:none}}
+.m-topo{padding:12px 14px 8px;border-bottom:1px solid #eee}
+.m-topo h2{margin:0 0 6px;font-size:18px;display:flex;justify-content:space-between;align-items:center}
+.m-topo input{width:100%;font:inherit;font-size:15px;padding:8px 10px;border:1px solid #bbb;border-radius:8px}
+.m-topo .nota{font-size:12px;margin:6px 0 0;color:#444}
+#menu-lista{overflow:auto;flex:1;padding:6px 10px 16px}
+.m-sala h3{font-size:14px;margin:12px 0 4px;padding-left:8px;border-left:6px solid var(--cor)}
+.m-sala ul{list-style:none;margin:0;padding:0}
+.m-pessoa{width:100%;text-align:left;font:inherit;background:none;border:0;border-bottom:1px solid #eee;padding:7px 6px;display:flex;flex-direction:column;gap:2px;cursor:pointer;color:#1f1f1f;min-height:44px}
+.m-nome{font-weight:700}.m-st{font-size:12px;display:flex;align-items:center;gap:5px}.m-st .b{margin:0}
+.m-det{font-size:12px;color:#333}
+.m-pessoa:focus-visible,.btn-menu:focus-visible,#menu input:focus-visible,#menu-fechar:focus-visible{outline:3px solid #1d5fd6;outline-offset:2px}

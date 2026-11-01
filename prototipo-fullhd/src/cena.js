@@ -229,6 +229,7 @@ function atualizarLista(l) {
 
 // ---------- painel lateral (detalhes de projeto/tarefa só no modo privado) ----------
 const painel = document.getElementById("painel"); let painelAberto = null, dadosPriv = null;
+const semInfo = v => !v || v === "sem informação";
 async function abrirPainel(sel) {
   painelAberto = sel; painel.hidden = false;
   if (privado && !dadosPriv) dadosPriv = await carregarPrivado().catch(() => null);
@@ -244,7 +245,7 @@ async function abrirPainel(sel) {
     const li = document.createElement("li"); const pv = priv.get(a.sala + "|" + a.nome);
     const linha = (rot, val) => { const d = document.createElement("div"); const b = document.createElement("b"); b.textContent = rot + ": "; d.append(b, document.createTextNode(val)); return d; };
     const n = document.createElement("div"); n.className = "nome"; n.innerHTML = `<i class="b ${a.status}"></i>`; n.append(document.createTextNode(`${a.nome} — ${a.status}`)); li.append(n);
-    if (privado && dadosPriv) { li.append(linha("Função", pv?.funcao || "sem informação"), linha("Projeto", pv?.projeto || "sem informação"), linha("Tarefa", pv?.tarefa || "sem informação"), linha("Última atividade no box", pv?.ultimaAtividade || "sem informação")); }
+    if (privado && dadosPriv) { li.append(linha("Função", pv?.funcao || "sem função registrada"), linha("Tarefa", semInfo(pv?.tarefa) ? "sem tarefa registrada" : pv.tarefa), linha("Projeto", semInfo(pv?.projeto) ? "sem projeto registrado" : pv.projeto), linha("Última atividade no box", pv?.ultimaAtividade || "sem informação")); }
     ul.append(li);
   }
   h.append(ul);
@@ -354,7 +355,11 @@ function desenharQuadrantes(salasCfg) {
     for (const s of pg) {
       const pessoas = listaAtual.filter(a => a.sala === s.nome);
       const q = document.createElement("section"); q.className = "q-sala"; q.style.setProperty("--cor", s.cor); q.setAttribute("aria-labelledby", "q-" + s.id);
-      const h = document.createElement("h2"); h.id = "q-" + s.id; h.textContent = s.nome; q.append(h);
+      const h = document.createElement("h2"); h.id = "q-" + s.id;
+      if (foco === "todas") { const bx = document.createElement("button"); bx.type = "button"; bx.className = "q-expandir"; bx.textContent = s.nome; bx.setAttribute("aria-label", `Abrir a sala ${s.nome} em tela cheia`); bx.onclick = () => expandir(s.id); h.append(bx); }
+      else h.textContent = s.nome;
+      q.append(h);
+      if (foco === "todas") q.addEventListener("click", e => { if (!e.target.closest("button,.q-cena,.q-pessoas")) expandir(s.id); });
       const c = document.createElement("p"); c.className = "q-cont";
       for (const [st, n] of contagem(pessoas)) { const sp = document.createElement("span"); const i = document.createElement("i"); i.className = "b " + st; i.setAttribute("aria-hidden", "true"); sp.append(i, document.createTextNode(String(n))); sp.title = ROT_ST[st]; sp.setAttribute("aria-label", `${ROT_ST[st]}: ${n}`); c.append(sp); }
       q.append(c);
@@ -371,7 +376,9 @@ function desenharQuadrantes(salasCfg) {
   const marcar = () => { const i = Math.round(trilho.scrollLeft / Math.max(1, trilho.clientWidth)); pontos.forEach((b, k) => b.setAttribute("aria-current", k === i ? "page" : "false")); };
   trilho.addEventListener("scroll", () => requestAnimationFrame(marcar), { passive: true });
   const antes = grade.querySelector(".q-trilho")?.scrollLeft || 0;
-  grade.className = "grade quad"; grade.replaceChildren(trilho, ...(paginas.length > 1 ? [ind] : []), r.domElement);
+  const extras = [];
+  if (foco !== "todas") { const v = document.createElement("button"); v.type = "button"; v.className = "q-voltar"; v.textContent = "← Voltar aos quadrantes"; v.onclick = () => voltarQuadrantes(false); extras.push(v); trilho.classList.add("expandida"); }
+  grade.className = "grade quad"; grade.replaceChildren(...extras, trilho, ...(paginas.length > 1 ? [ind] : []), r.domElement);
   const pos = () => { if (paginaInicial > 1 && trilho.clientWidth) { trilho.scrollLeft = (paginaInicial - 1) * trilho.clientWidth; paginaInicial = 1; } else if (antes) trilho.scrollLeft = antes; marcar(); };
   pos(); requestAnimationFrame(pos);
 }
@@ -424,8 +431,69 @@ function tocarMini(id, e) { // toque na mini-cena: pessoa mais próxima (até 36
   const u = ultimaCam.get(id); if (!u) return; const q = e.currentTarget.getBoundingClientRect(); const v = new THREE.Vector3(); let melhor = null, dmin = 36;
   for (const ag of agentes.values()) { if (salas.get(id)?.s.nome !== ag.a.sala) continue; ag.pessoa.ossos.head.getWorldPosition(v); v.project(u.cam);
     const px = q.left + (v.x + 1) / 2 * q.width, py = q.top + (1 - v.y) / 2 * q.height, d = Math.hypot(px - e.clientX, py - e.clientY); if (d < dmin) { dmin = d; melhor = ag; } }
-  if (melhor) abrirPainel({ sala: melhor.a.sala, nome: melhor.a.nome });
+  if (melhor) abrirPainel({ sala: melhor.a.sala, nome: melhor.a.nome }); else expandir(id);
 }
+
+// ---------- menu lateral: todos os agentes por sala ----------
+const btnMenu = document.getElementById("abrir-menu"), menu = document.getElementById("menu");
+let menuFiltro = "";
+async function desenharMenu() {
+  if (privado && !dadosPriv) dadosPriv = await carregarPrivado().catch(() => null);
+  const priv = new Map((dadosPriv?.agentes || []).map(a => [a.sala + "|" + a.nome, a]));
+  const lista = document.getElementById("menu-lista"); const frag = document.createDocumentFragment();
+  const f = menuFiltro.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+  let total = 0;
+  for (const s of cfg.salas) {
+    const pessoas = listaAtual.filter(a => a.sala === s.nome && a.nome.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().includes(f));
+    if (!pessoas.length) continue; total += pessoas.length;
+    const sec = document.createElement("section"); sec.className = "m-sala"; sec.style.setProperty("--cor", s.corEfetiva);
+    const h = document.createElement("h3"); h.textContent = `${s.nome} (${pessoas.length})`; sec.append(h);
+    const ul = document.createElement("ul");
+    for (const a of pessoas) {
+      const li = document.createElement("li"); const b = document.createElement("button"); b.type = "button"; b.className = "m-pessoa";
+      const n = document.createElement("span"); n.className = "m-nome"; n.textContent = a.nome;
+      const st = document.createElement("span"); st.className = "m-st"; const i = document.createElement("i"); i.className = "b " + a.status; i.setAttribute("aria-hidden", "true"); st.append(i, document.createTextNode(ROT_ST[a.status]));
+      b.append(n, st); let rotulo = `${a.nome}, sala ${a.sala}, ${ROT_ST[a.status]}`;
+      if (privado && dadosPriv) { // função e tarefa SÓ no modo privado local
+        const pv = priv.get(a.sala + "|" + a.nome);
+        const fn = document.createElement("span"); fn.className = "m-det"; fn.textContent = "Função: " + (pv?.funcao || "sem função registrada");
+        const tf = document.createElement("span"); tf.className = "m-det"; const tar = semInfo(pv?.tarefa) ? "sem tarefa registrada" : pv.tarefa, prj = semInfo(pv?.projeto) ? "" : ` (${pv.projeto})`;
+        tf.textContent = "Fazendo: " + tar + prj; b.append(fn, tf); rotulo += `. ${fn.textContent}. ${tf.textContent}`;
+      }
+      b.setAttribute("aria-label", rotulo); b.onclick = () => { fecharMenu(false); abrirPainel({ sala: a.sala, nome: a.nome }); };
+      li.append(b); ul.append(li);
+    }
+    sec.append(ul); frag.append(sec);
+  }
+  if (!total) { const p = document.createElement("p"); p.className = "nota"; p.textContent = "Nenhum agente com esse nome."; frag.append(p); }
+  lista.replaceChildren(frag);
+  document.getElementById("menu-nota").textContent = privado ? (dadosPriv ? "Modo privado local: função (título do perfil) e tarefa registrada pelo próprio agente." : "Modo privado indisponível aqui.") : "Versão pública: só nome, sala e status.";
+}
+function abrirMenu() { menu.hidden = false; menu.classList.add("aberto"); btnMenu.setAttribute("aria-expanded", "true"); desenharMenu(); document.getElementById("menu-busca").focus(); }
+function fecharMenu(devolverFoco = true) { menu.hidden = true; menu.classList.remove("aberto"); btnMenu.setAttribute("aria-expanded", "false"); if (devolverFoco) btnMenu.focus(); }
+btnMenu.onclick = () => menu.hidden ? abrirMenu() : fecharMenu();
+document.getElementById("menu-fechar").onclick = () => fecharMenu();
+document.getElementById("menu-busca").addEventListener("input", e => { menuFiltro = e.target.value; desenharMenu(); });
+menu.addEventListener("keydown", e => { // mantém o foco dentro do menu
+  if (e.key !== "Tab") return; const f = [...menu.querySelectorAll("button,input")].filter(x => x.offsetParent); if (!f.length) return;
+  if (e.shiftKey && document.activeElement === f[0]) { e.preventDefault(); f.at(-1).focus(); } else if (!e.shiftKey && document.activeElement === f.at(-1)) { e.preventDefault(); f[0].focus(); } });
+
+// ---------- quadrante expandido (celular): ?sala=X, Voltar, Esc e voltar do navegador ----------
+function expandir(id) {
+  if (!modoQuad() || foco === id) return; foco = id; history.pushState({ sala: id }, "", trocarSala(id)); criarAbas(); desenharLista();
+  grade.querySelector(".q-voltar")?.focus();
+}
+function voltarQuadrantes(viaHistorico) {
+  if (foco === "todas") return; foco = "todas"; if (!viaHistorico) history.pushState({}, "", trocarSala(null)); criarAbas(); desenharLista();
+}
+function trocarSala(id) { const u = new URL(location.href); if (id) u.searchParams.set("sala", id); else u.searchParams.delete("sala"); u.searchParams.delete("pagina"); return u; }
+addEventListener("popstate", () => { const id = new URLSearchParams(location.search).get("sala"); if (vista !== "lista") return; if (id && salas.has(id)) { foco = id; criarAbas(); desenharLista(); } else voltarQuadrantes(true); });
+addEventListener("keydown", e => {
+  if (e.key !== "Escape") return;
+  if (!menu.hidden) { fecharMenu(); return; }
+  if (!painel.hidden) { painel.hidden = true; painelAberto = null; return; }
+  if (modoQuad() && foco !== "todas") voltarQuadrantes(false);
+});
 
 // ---------- laço ----------
 const relogio = new THREE.Clock(); const perf = window.__perf = { quadros: 0, tempos: [] };
