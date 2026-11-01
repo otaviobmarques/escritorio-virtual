@@ -17,7 +17,7 @@ As trocas de status tocam a transição real do clipe (sentar ou levantar, cerca
 ## Histórias
 - Como Otávio, vejo todas as salas numa tela Full HD e sei quem está trabalhando.
 - Como Otávio, toco numa sala ou pessoa e vejo os detalhes. Projeto e tarefa aparecem só no modo privado local (ADR-0010).
-- No celular (até 768 px), abro em páginas de 4 quadrantes (2x2), uma sala por quadrante, com a cor do logotipo, contagem e pessoas (nome + cor + texto do status). Mais de 4 salas: rolo para o lado. O topo fica fixo (contagem, filtro e botão da cena 3D) (ADR-0011).
+- No celular (até 768 px), abro em páginas de 4 quadrantes (2x2), uma sala por quadrante, com a cor do logotipo, contagem, a **sala em miniatura 3D** (agentes nas mesas, animados pelo status, num único canvas com viewports) e a lista compacta de pessoas (nome + cor + texto do status); tocar na pessoa abre o painel. Mais de 4 salas: rolo para o lado. O topo fica fixo (contagem, filtro e botão da cena 3D) (ADR-0011).
 - Cores das salas vêm dos logotipos reais; sem logotipo ou cores parecidas (distância < 25 em Lab), a sala usa cor neutra.
 
 ## Requisitos (atendidos no protótipo)
@@ -51,6 +51,8 @@ Usar rostos ou corpos diferentes por agente.
 
 ## Capturas da versão celular (01/11/2026)
 `prototipo-fullhd/capturas/`: `celular-quadrantes-real-p1.png`, `celular-quadrantes-real-p2.png`, `celular-quadrantes-teste-misto-p1.png`, `celular-quadrantes-teste-misto-p2.png`, `celular-quadrantes-teste-misto-painel.png`, `celular-cena-real.png`, `celular-cena-teste-misto.png`, `fullhd-cena-real.png`, `fullhd-cena-teste-misto.png` e `fullhd-lista-teste-misto.png`. Em todas, a verificação automática encontrou 0 rótulos fora da área visível e nenhum erro de página.
+
+Medições da versão celular com mini-cenas: ver ADR-0011 e `prototipo-fullhd/capturas/medicoes-celular-quadrantes.json`.
 
 ## Dúvidas em aberto
 - Ter mais de um modelo de pessoa CC0 para dar variedade.

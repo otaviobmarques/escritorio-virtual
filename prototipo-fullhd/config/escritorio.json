@@ -80,7 +80,7 @@
   }
  ],
  "modeloPessoa": "assets/harper-leve.glb",
- "colunasCelular": 2,
+ "colunasCelular": 3,
  "salasPorFileiraCelular": 1,
  "corNeutra": "#8A8580",
  "distanciaMinimaCor": 25,

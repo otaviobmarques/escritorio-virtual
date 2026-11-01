@@ -1,0 +1,63 @@
+{
+ "celular-quadrantes-real-p1": {
+  "fps": 2.5,
+  "tempoQuadroMedianaMs": 16.2,
+  "tempoQuadroP95Ms": 97.3,
+  "quadros": 15,
+  "canvas": 1,
+  "pixelRatio": 3,
+  "triangulos": 81028,
+  "erros": []
+ },
+ "celular-quadrantes-real-p2": {
+  "fps": 5.7,
+  "tempoQuadroMedianaMs": 6.1,
+  "tempoQuadroP95Ms": 9.4,
+  "quadros": 34,
+  "canvas": 1,
+  "pixelRatio": 3,
+  "triangulos": 289548,
+  "erros": []
+ },
+ "celular-quadrantes-teste-misto-p1": {
+  "fps": 3.3,
+  "tempoQuadroMedianaMs": 12.7,
+  "tempoQuadroP95Ms": 22.2,
+  "quadros": 20,
+  "canvas": 1,
+  "pixelRatio": 3,
+  "triangulos": 81028,
+  "erros": []
+ },
+ "celular-quadrantes-teste-misto-p2": {
+  "fps": 19.7,
+  "tempoQuadroMedianaMs": 2.1,
+  "tempoQuadroP95Ms": 3.6,
+  "quadros": 118,
+  "canvas": 1,
+  "pixelRatio": 3,
+  "triangulos": 48948,
+  "erros": []
+ },
+ "celular-quadrantes-teste-misto-toque": {
+  "fps": 3.5,
+  "tempoQuadroMedianaMs": 10.7,
+  "tempoQuadroP95Ms": 14.3,
+  "quadros": 21,
+  "canvas": 1,
+  "pixelRatio": 3,
+  "triangulos": 81028,
+  "toqueAbriuPainel": true,
+  "erros": []
+ },
+ "fullhd-cena-teste-misto": {
+  "fps": 2.8,
+  "tempoQuadroMedianaMs": 11.5,
+  "tempoQuadroP95Ms": 13.5,
+  "quadros": 17,
+  "canvas": 1,
+  "pixelRatio": 1,
+  "triangulos": 521200,
+  "erros": []
+ }
+}

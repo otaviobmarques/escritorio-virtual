@@ -83,3 +83,9 @@ header{position:sticky;top:0}
 .q-ind button::before{content:"";width:10px;height:10px;border-radius:50%;background:#bdb5aa}
 .q-ind button[aria-current=page]::before{background:#222;width:22px;border-radius:6px}
 .q-pessoa:focus-visible,.q-pessoas:focus-visible,.q-trilho:focus-visible,.q-ind button:focus-visible{outline:3px solid #1d5fd6;outline-offset:-3px}
+
+/* celular: mini-cena 3D em cada quadrante (um único canvas por cima, ADR-0011) */
+.grade.quad{position:relative}
+.q-canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2}
+.q-cena{flex:0 0 52%;min-height:0;cursor:pointer;border-bottom:1px solid #eee}
+.q-pessoa{min-height:36px;padding:3px 4px}

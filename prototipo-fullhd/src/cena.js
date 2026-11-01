@@ -47,7 +47,7 @@ function textoSobre(hex) { // texto preto ou branco, o que der mais contraste (W
 window.__cores = () => cfg.salas.map(s => ({ sala: s.nome, cor: s.corEfetiva, motivo: s.motivoCor }));
 
 // ---------- renderizador, luz clara ----------
-const r = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance", preserveDrawingBuffer: params.has("captura") });
+const r = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: "high-performance", preserveDrawingBuffer: params.has("captura") });
 r.setPixelRatio(Math.min(devicePixelRatio, celular() ? 2 : 1.25));
 r.outputColorSpace = THREE.SRGBColorSpace; r.toneMapping = THREE.ACESFilmicToneMapping; r.toneMappingExposure = 1.05;
 r.shadowMap.enabled = true; r.shadowMap.type = THREE.PCFSoftShadowMap;
@@ -182,7 +182,7 @@ function montar(lista) {
       el.firstChild.textContent = c.s?.nome ?? c.extra.nome; el.lastChild.textContent = c.s?.descricao ?? ""; camRot.append(el);
       if (c.s) el.onclick = () => abrirPainel({ sala: c.s.nome });
       const caixa = new THREE.Box3(new THREE.Vector3(-c.w / 2, 0, -prof / 2), new THREE.Vector3(c.w / 2, 1.8, prof / 2)).translate(grupo.position);
-      salas.set(id, { s: c.s, extra: c.extra, el, ancora: new THREE.Vector3(-c.w / 2 + 1.2, 1.25, -prof / 2 + .1).add(grupo.position), caixa });
+      salas.set(id, { s: c.s, extra: c.extra, el, grupo, ancora: new THREE.Vector3(-c.w / 2 + 1.2, 1.25, -prof / 2 + .1).add(grupo.position), caixa });
       if (c.extra) areaExtra(grupo, c.extra);
       else porSala.get(c.s.nome).forEach((a, k) => {
         const col = k % c.k, lin = Math.floor(k / c.k);
@@ -358,6 +358,8 @@ function desenharQuadrantes(salasCfg) {
       const c = document.createElement("p"); c.className = "q-cont";
       for (const [st, n] of contagem(pessoas)) { const sp = document.createElement("span"); const i = document.createElement("i"); i.className = "b " + st; i.setAttribute("aria-hidden", "true"); sp.append(i, document.createTextNode(String(n))); sp.title = ROT_ST[st]; sp.setAttribute("aria-label", `${ROT_ST[st]}: ${n}`); c.append(sp); }
       q.append(c);
+      const mini = document.createElement("div"); mini.className = "q-cena"; mini.dataset.sala = s.id; mini.setAttribute("aria-hidden", "true"); // a lista abaixo é o acesso acessível
+      mini.addEventListener("click", e => tocarMini(s.id, e)); q.append(mini);
       const ul = document.createElement("ul"); ul.className = "q-pessoas"; ul.setAttribute("aria-label", `Pessoas da sala ${s.nome}`); ul.tabIndex = 0;
       for (const a of pessoas) ul.append(cartaoPessoa(a, true));
       q.append(ul); p.append(q);
@@ -369,27 +371,77 @@ function desenharQuadrantes(salasCfg) {
   const marcar = () => { const i = Math.round(trilho.scrollLeft / Math.max(1, trilho.clientWidth)); pontos.forEach((b, k) => b.setAttribute("aria-current", k === i ? "page" : "false")); };
   trilho.addEventListener("scroll", () => requestAnimationFrame(marcar), { passive: true });
   const antes = grade.querySelector(".q-trilho")?.scrollLeft || 0;
-  grade.className = "grade quad"; grade.replaceChildren(trilho, ...(paginas.length > 1 ? [ind] : []));
+  grade.className = "grade quad"; grade.replaceChildren(trilho, ...(paginas.length > 1 ? [ind] : []), r.domElement);
   const pos = () => { if (paginaInicial > 1 && trilho.clientWidth) { trilho.scrollLeft = (paginaInicial - 1) * trilho.clientWidth; paginaInicial = 1; } else if (antes) trilho.scrollLeft = antes; marcar(); };
   pos(); requestAnimationFrame(pos);
 }
+function modoQuad() { return vista === "lista" && celular(); }
 function aplicarVista() {
   const lista = vista === "lista";
   grade.hidden = !lista; palco.hidden = lista;
   btnVista.textContent = lista ? "Ver cena 3D" : "Ver lista"; btnVista.setAttribute("aria-pressed", String(!lista));
+  if (modoQuad()) { grade.append(r.domElement); r.domElement.classList.add("q-canvas"); r.setPixelRatio(Math.min(devicePixelRatio, 1.5)); }
+  else { palco.prepend(r.domElement); r.domElement.classList.remove("q-canvas"); r.setPixelRatio(Math.min(devicePixelRatio, celular() ? 2 : 1.25)); }
   if (lista) desenharLista(); else { if (celular() && foco === "todas") foco = null; criarAbas(); enquadrar(); }
+  if (modoQuad()) grade.append(r.domElement);
 }
 btnVista.onclick = () => { vista = vista === "lista" ? "cena" : "lista"; aplicarVista(); };
 
+// ---------- celular: salas em miniatura nos quadrantes, UM renderer com viewport/scissor ----------
+const DIR_Q = new THREE.Vector3(.18, 1.25, 1).normalize(), camQ = new THREE.OrthographicCamera(-1, 1, 1, -1, -200, 400), fundoQ = new THREE.Color(), BRANCO = new THREE.Color(0xffffff);
+const ultimaCam = new Map(); // sala -> {cam, rect} do último quadro, para tocar na pessoa
+function fitCam(c, caixa, w, h) {
+  const centro = caixa.getCenter(new THREE.Vector3()); c.position.copy(centro).addScaledVector(DIR_Q, 60); c.lookAt(centro); c.updateMatrixWorld();
+  const inv = c.matrixWorldInverse, v = new THREE.Vector3(); let mx = 0, my = 0;
+  for (const x of [caixa.min.x, caixa.max.x]) for (const y of [caixa.min.y, caixa.max.y]) for (const z of [caixa.min.z, caixa.max.z]) { v.set(x, y, z).applyMatrix4(inv); mx = Math.max(mx, Math.abs(v.x)); my = Math.max(my, Math.abs(v.y)); }
+  const mh = Math.max(my, mx * h / w) * 1.02; Object.assign(c, { left: -mh * w / h, right: mh * w / h, top: mh, bottom: -mh }); c.updateProjectionMatrix();
+}
+function quadrosVisiveis() {
+  const g = grade.getBoundingClientRect(); const out = [];
+  for (const el of grade.querySelectorAll(".q-cena")) { const q = el.getBoundingClientRect(); if (q.right <= g.left + 1 || q.left >= g.right - 1 || q.bottom <= g.top || q.top >= g.bottom || q.width < 4 || q.height < 4) continue; out.push([el.dataset.sala, q]); }
+  return [g, out];
+}
+function renderQuad(dt, tempo) {
+  const [g, vis] = quadrosVisiveis(); const W = Math.round(g.width), H = Math.round(g.height);
+  const tam = r.getSize(new THREE.Vector2()); if (tam.x !== W || tam.y !== H) r.setSize(W, H, false);
+  const ids = new Set(vis.map(v => v[0]));
+  const nomeDe = new Map(cfg.salas.map(s => [s.nome, s.id]));
+  for (const ag of agentes.values()) if (ids.has(nomeDe.get(ag.a.sala))) animar(ag, dt, tempo); // só anima o que aparece
+  const fundoAnt = cena.background; r.setScissorTest(false); r.setClearColor(0x000000, 0); r.clear();
+  r.setScissorTest(true);
+  for (const [id, q] of vis) {
+    const sl = salas.get(id); if (!sl) continue;
+    for (const o of salas.values()) o.grupo.visible = o === sl;
+    const x = q.left - g.left, y = g.bottom - q.bottom; r.setViewport(x, y, q.width, q.height);
+    r.setScissor(Math.max(0, x), Math.max(0, y), Math.min(W, x + q.width) - Math.max(0, x), Math.min(H, y + q.height) - Math.max(0, y));
+    fitCam(camQ, sl.caixa, q.width, q.height);
+    cena.background = fundoQ.set(sl.s.corEfetiva).lerp(BRANCO, .88);
+    r.render(cena, camQ); ultimaCam.set(id, { cam: camQ.clone(), q });
+  }
+  r.setScissorTest(false); for (const o of salas.values()) o.grupo.visible = true; cena.background = fundoAnt;
+}
+function tocarMini(id, e) { // toque na mini-cena: pessoa mais próxima (até 36 px) abre o painel
+  const u = ultimaCam.get(id); if (!u) return; const q = e.currentTarget.getBoundingClientRect(); const v = new THREE.Vector3(); let melhor = null, dmin = 36;
+  for (const ag of agentes.values()) { if (salas.get(id)?.s.nome !== ag.a.sala) continue; ag.pessoa.ossos.head.getWorldPosition(v); v.project(u.cam);
+    const px = q.left + (v.x + 1) / 2 * q.width, py = q.top + (1 - v.y) / 2 * q.height, d = Math.hypot(px - e.clientX, py - e.clientY); if (d < dmin) { dmin = d; melhor = ag; } }
+  if (melhor) abrirPainel({ sala: melhor.a.sala, nome: melhor.a.nome });
+}
+
 // ---------- laço ----------
-const relogio = new THREE.Clock(); const perf = window.__perf = { quadros: 0 };
+const relogio = new THREE.Clock(); const perf = window.__perf = { quadros: 0, tempos: [] };
 function laco() {
-  if (vista === "lista") { requestAnimationFrame(laco); return; }
+  requestAnimationFrame(laco);
+  if (document.hidden) return; // pausa fora da tela
+  const t0 = performance.now();
   const dt = Math.min(relogio.getDelta(), .1), tempo = relogio.elapsedTime;
-  for (const ag of agentes.values()) animar(ag, dt, tempo);
-  const a = alvo.clone().add(pan), aspecto = palco.clientWidth / palco.clientHeight, mh = meiaAlt * zoom;
-  cam.position.copy(a).addScaledVector(DIR_ISO, 60); cam.lookAt(a); Object.assign(cam, { left: -mh * aspecto, right: mh * aspecto, top: mh, bottom: -mh }); cam.updateProjectionMatrix();
-  r.render(cena, cam); rotulos(); perf.quadros++; requestAnimationFrame(laco);
+  if (vista === "lista") { if (!modoQuad()) return; renderQuad(dt, tempo); }
+  else {
+    for (const ag of agentes.values()) animar(ag, dt, tempo);
+    const a = alvo.clone().add(pan), aspecto = palco.clientWidth / palco.clientHeight, mh = meiaAlt * zoom;
+    cam.position.copy(a).addScaledVector(DIR_ISO, 60); cam.lookAt(a); Object.assign(cam, { left: -mh * aspecto, right: mh * aspecto, top: mh, bottom: -mh }); cam.updateProjectionMatrix();
+    r.setViewport(0, 0, palco.clientWidth, palco.clientHeight); r.render(cena, cam); rotulos();
+  }
+  perf.quadros++; perf.tempos.push(performance.now() - t0); if (perf.tempos.length > 300) perf.tempos.shift();
 }
 const selo = document.getElementById("selo"); selo.textContent = fonte.selo + (privado ? " · modo privado" : ""); if (!fonte.exemplo) selo.classList.add("real");
 try { atualizarLista(await fonte.carregar()); } catch (e) { selo.textContent = "Falha ao ler status: " + e.message; }
