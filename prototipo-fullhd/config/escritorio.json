@@ -1,0 +1,75 @@
+{
+ "versao": 1,
+ "observacao": "Layout do protótipo Full HD. Salas na ordem de exibição; uma mesa por agente, em grade de 'colunas' mesas por fileira. 'areasExtras' são ambientes decorativos (sem agentes).",
+ "status": [
+  "trabalhando",
+  "parado",
+  "esperando"
+ ],
+ "inatividadeMin": 10,
+ "mesa": {
+  "largura": 1.4,
+  "profundidade": 0.7,
+  "altura": 0.74,
+  "espacoX": 2.3,
+  "espacoZ": 2.7
+ },
+ "salasPorFileira": 3,
+ "espacoEntreSalas": 0.4,
+ "salas": [
+  {
+   "nome": "RedBox",
+   "id": "redbox",
+   "descricao": "Agência",
+   "cor": "#d64545",
+   "colunas": 5
+  },
+  {
+   "nome": "Vértice",
+   "id": "vertice",
+   "descricao": "Produtora de vídeo",
+   "cor": "#7b5cd6",
+   "colunas": 5
+  },
+  {
+   "nome": "Restaurantes",
+   "id": "restaurantes",
+   "descricao": "Operação de restaurantes",
+   "cor": "#e08a2e",
+   "colunas": 3
+  },
+  {
+   "nome": "Jurídico",
+   "id": "juridico",
+   "descricao": "Departamento jurídico",
+   "cor": "#3a8f6b",
+   "colunas": 3
+  },
+  {
+   "nome": "Domma",
+   "id": "domma",
+   "descricao": "Sistemas",
+   "cor": "#2f7fd0",
+   "colunas": 5
+  }
+ ],
+ "areasExtras": [
+  {
+   "id": "reuniao",
+   "nome": "Sala de reunião",
+   "tipo": "reuniao",
+   "largura": 7.5,
+   "profundidade": 5.5
+  },
+  {
+   "id": "descanso",
+   "nome": "Área de descanso",
+   "tipo": "descanso",
+   "largura": 7.5,
+   "profundidade": 5.5
+  }
+ ],
+ "modeloPessoa": "assets/harper-leve.glb",
+ "colunasCelular": 2,
+ "salasPorFileiraCelular": 1
+}

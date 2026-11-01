@@ -1,3 +1,289 @@
 {
- "agentes": []
+ "agentes": [
+  {
+   "nome": "Augusto",
+   "sala": "Domma",
+   "status": "parado"
+  },
+  {
+   "nome": "Caetano",
+   "sala": "Domma",
+   "status": "parado"
+  },
+  {
+   "nome": "Fabrício",
+   "sala": "Domma",
+   "status": "parado"
+  },
+  {
+   "nome": "Heloísa",
+   "sala": "Domma",
+   "status": "parado"
+  },
+  {
+   "nome": "Henrique",
+   "sala": "Domma",
+   "status": "parado"
+  },
+  {
+   "nome": "Igor",
+   "sala": "Domma",
+   "status": "parado"
+  },
+  {
+   "nome": "Joaquim",
+   "sala": "Domma",
+   "status": "parado"
+  },
+  {
+   "nome": "Leonardo",
+   "sala": "Domma",
+   "status": "parado"
+  },
+  {
+   "nome": "Lorena",
+   "sala": "Domma",
+   "status": "parado"
+  },
+  {
+   "nome": "Matilde",
+   "sala": "Domma",
+   "status": "parado"
+  },
+  {
+   "nome": "Nícolas",
+   "sala": "Domma",
+   "status": "parado"
+  },
+  {
+   "nome": "Otília",
+   "sala": "Domma",
+   "status": "parado"
+  },
+  {
+   "nome": "Rodrigo",
+   "sala": "Domma",
+   "status": "parado"
+  },
+  {
+   "nome": "Sabrina",
+   "sala": "Domma",
+   "status": "parado"
+  },
+  {
+   "nome": "Severino",
+   "sala": "Domma",
+   "status": "parado"
+  },
+  {
+   "nome": "Teodoro",
+   "sala": "Domma",
+   "status": "parado"
+  },
+  {
+   "nome": "Tobias",
+   "sala": "Domma",
+   "status": "parado"
+  },
+  {
+   "nome": "Valéria",
+   "sala": "Domma",
+   "status": "parado"
+  },
+  {
+   "nome": "Bruno",
+   "sala": "Jurídico",
+   "status": "parado"
+  },
+  {
+   "nome": "Clara",
+   "sala": "Jurídico",
+   "status": "parado"
+  },
+  {
+   "nome": "Jéssica",
+   "sala": "Jurídico",
+   "status": "parado"
+  },
+  {
+   "nome": "Marina",
+   "sala": "Jurídico",
+   "status": "parado"
+  },
+  {
+   "nome": "Rafael",
+   "sala": "Jurídico",
+   "status": "parado"
+  },
+  {
+   "nome": "Andreia",
+   "sala": "RedBox",
+   "status": "parado"
+  },
+  {
+   "nome": "Beatriz",
+   "sala": "RedBox",
+   "status": "parado"
+  },
+  {
+   "nome": "Caio",
+   "sala": "RedBox",
+   "status": "parado"
+  },
+  {
+   "nome": "Fernando",
+   "sala": "RedBox",
+   "status": "parado"
+  },
+  {
+   "nome": "Gabriel",
+   "sala": "RedBox",
+   "status": "parado"
+  },
+  {
+   "nome": "Helena",
+   "sala": "RedBox",
+   "status": "parado"
+  },
+  {
+   "nome": "Henriquiano",
+   "sala": "RedBox",
+   "status": "parado"
+  },
+  {
+   "nome": "Julia",
+   "sala": "RedBox",
+   "status": "parado"
+  },
+  {
+   "nome": "Lucas",
+   "sala": "RedBox",
+   "status": "parado"
+  },
+  {
+   "nome": "Marcos",
+   "sala": "RedBox",
+   "status": "parado"
+  },
+  {
+   "nome": "Otávia",
+   "sala": "RedBox",
+   "status": "parado"
+  },
+  {
+   "nome": "Pedro",
+   "sala": "RedBox",
+   "status": "parado"
+  },
+  {
+   "nome": "Renato",
+   "sala": "RedBox",
+   "status": "parado"
+  },
+  {
+   "nome": "Sérgio",
+   "sala": "RedBox",
+   "status": "parado"
+  },
+  {
+   "nome": "Vitor",
+   "sala": "RedBox",
+   "status": "parado"
+  },
+  {
+   "nome": "Aurora",
+   "sala": "Restaurantes",
+   "status": "parado"
+  },
+  {
+   "nome": "Camila",
+   "sala": "Restaurantes",
+   "status": "parado"
+  },
+  {
+   "nome": "Diego",
+   "sala": "Restaurantes",
+   "status": "parado"
+  },
+  {
+   "nome": "Rogério",
+   "sala": "Restaurantes",
+   "status": "parado"
+  },
+  {
+   "nome": "Sofia",
+   "sala": "Restaurantes",
+   "status": "parado"
+  },
+  {
+   "nome": "Wesley",
+   "sala": "Restaurantes",
+   "status": "parado"
+  },
+  {
+   "nome": "Aurélia",
+   "sala": "Vértice",
+   "status": "parado"
+  },
+  {
+   "nome": "Benício",
+   "sala": "Vértice",
+   "status": "parado"
+  },
+  {
+   "nome": "Bernardo",
+   "sala": "Vértice",
+   "status": "parado"
+  },
+  {
+   "nome": "Cecília",
+   "sala": "Vértice",
+   "status": "parado"
+  },
+  {
+   "nome": "Celeste",
+   "sala": "Vértice",
+   "status": "parado"
+  },
+  {
+   "nome": "Heitor",
+   "sala": "Vértice",
+   "status": "parado"
+  },
+  {
+   "nome": "Lis",
+   "sala": "Vértice",
+   "status": "parado"
+  },
+  {
+   "nome": "Lorenzo",
+   "sala": "Vértice",
+   "status": "parado"
+  },
+  {
+   "nome": "Maycon",
+   "sala": "Vértice",
+   "status": "parado"
+  },
+  {
+   "nome": "Valentina",
+   "sala": "Vértice",
+   "status": "parado"
+  },
+  {
+   "nome": "Vicente",
+   "sala": "Vértice",
+   "status": "parado"
+  },
+  {
+   "nome": "Ícaro",
+   "sala": "Vértice",
+   "status": "parado"
+  },
+  {
+   "nome": "Ísis",
+   "sala": "Vértice",
+   "status": "parado"
+  }
+ ]
 }

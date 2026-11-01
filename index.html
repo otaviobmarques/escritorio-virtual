@@ -1,14 +1,25 @@
 <!doctype html>
-<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Escritório Virtual — Domma</title><link rel="stylesheet" href="src/estilo.css"></head>
-<body>
-<header><div><h1>Escritório Virtual</h1><p>Time de agentes de IA — visão ao vivo</p></div>
-<span class="selo" role="status">⚠ Dados de exemplo</span></header>
-<p class="aviso" id="aviso"></p>
-<nav class="legenda" aria-label="Legenda">
-<span><i class="b trabalhando"></i>Trabalhando <b id="c-trabalhando">0</b></span>
-<span><i class="b parado"></i>Parado <b id="c-parado">0</b></span>
-<span><i class="b esperando"></i>Esperando <b id="c-esperando">0</b></span></nav>
-<main id="salas"></main>
-<footer>Domma Tecnologia · protótipo · fonte: <span id="fonte"></span></footer>
-<script type="module" src="src/app.js"></script></body></html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Escritório Virtual — protótipo Full HD</title>
+<link rel="stylesheet" href="prototipo-fullhd/src/estilo.css">
+<script type="importmap">{"imports":{"three":"./vendor/three.module.min.js","three/addons/":"./prototipo-fullhd/vendor/addons/"}}</script>
+</head><body>
+<header>
+  <div class="tit"><h1>Escritório Virtual</h1><span class="selo" id="selo" role="status">carregando…</span></div>
+  <nav class="legenda" aria-label="Legenda de status">
+    <span><i class="b trabalhando"></i>Trabalhando <b id="c-trabalhando">0</b></span>
+    <span><i class="b parado"></i>Parado <b id="c-parado">0</b></span>
+    <span><i class="b esperando"></i>Esperando <b id="c-esperando">0</b></span>
+  </nav>
+  <nav class="abas" id="abas" aria-label="Salas"></nav>
+  <a class="classico" href="classico.html">Versão clássica (pixel art)</a>
+</header>
+<div id="corpo"><main id="palco" aria-describedby="lista">
+  <div id="rotulos"></div>
+  <p id="carregando">Carregando cena 3D…</p>
+</main>
+<aside id="painel" hidden aria-live="polite"></aside></div>
+<ul id="lista" class="sr"></ul>
+<script type="module" src="prototipo-fullhd/src/cena.js"></script>
+</body></html>
