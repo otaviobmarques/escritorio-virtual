@@ -12,12 +12,15 @@ const url = p => new URL(p, BASE).href;
 const COR_STATUS = { trabalhando: 0x2e9e57, parado: 0x8d8a85, esperando: 0xe0a020 };
 const CORES_TERNO = [0x2b3442, 0x4a4f57, 0x5b4636, 0x1e3350, 0x6a6058, 0x2f4a3a, 0x50405e, 0x7a7f86];
 const hash = s => { let h = 7; for (const c of s) h = (h * 31 + c.charCodeAt(0)) | 0; return Math.abs(h); };
-const celular = () => innerWidth <= 760;
+const celular = () => innerWidth <= 768;
 
 const cfg = await (await fetch(url("config/escritorio.json"), { cache: "no-store" })).json();
 const fonte = criarFonte(cfg, params, url);
 const privado = params.get("modo") === "privado";
 const palco = document.getElementById("palco"), camRot = document.getElementById("rotulos");
+let vista = params.get("vista") || (celular() ? "lista" : "cena");
+const grade = document.getElementById("grade"), btnVista = document.getElementById("alternar-vista");
+
 
 // ---------- renderizador, luz clara ----------
 const r = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance", preserveDrawingBuffer: params.has("captura") });
@@ -32,7 +35,7 @@ const sol = new THREE.DirectionalLight(0xfff6ea, 1.5); sol.castShadow = true; so
 cena.add(sol, sol.target);
 const cam = new THREE.OrthographicCamera(-10, 10, 10, -10, -200, 400);
 const DIR_PC = new THREE.Vector3(1, 1.35, 1).normalize(), DIR_CEL = new THREE.Vector3(.3, 1.5, 1).normalize(); // isométrica no PC; mais frontal no celular (sala alta cabe na tela em pé)
-let DIR_ISO = innerWidth <= 760 ? DIR_CEL : DIR_PC;
+let DIR_ISO = innerWidth <= 768 ? DIR_CEL : DIR_PC;
 
 // ---------- texturas procedurais (sem arquivos de imagem de terceiros) ----------
 function texMadeira() {
@@ -197,6 +200,7 @@ function atualizarLista(l) {
   for (const st of cfg.status) document.getElementById("c-" + st).textContent = l.filter(a => a.status === st).length;
   document.getElementById("lista").replaceChildren(...l.map(a => { const li = document.createElement("li"); li.textContent = `${a.nome}, sala ${a.sala}: ${a.status}`; return li; }));
   if (painelAberto) abrirPainel(painelAberto);
+  if (vista === "lista") desenharLista();
 }
 
 // ---------- painel lateral (detalhes de projeto/tarefa só no modo privado) ----------
@@ -228,8 +232,8 @@ async function abrirPainel(sel) {
 let foco = params.get("sala") || null;
 function criarAbas() {
   const nav = document.getElementById("abas"); nav.replaceChildren();
-  const ids = [...salas.keys()].filter(id => salas.get(id).s); if (foco === null || (foco !== "todas" && !salas.has(foco))) foco = celular() ? ids[0] : "todas";
-  for (const id of ["todas", ...ids]) { const b = document.createElement("button"); b.textContent = id === "todas" ? "Todas" : salas.get(id).s.nome; b.setAttribute("aria-pressed", String(id === foco)); b.onclick = () => { foco = id; criarAbas(); enquadrar(); }; nav.append(b); }
+  const ids = [...salas.keys()].filter(id => salas.get(id).s); if (foco === null || (foco !== "todas" && !salas.has(foco))) foco = celular() && vista !== "lista" ? ids[0] : "todas";
+  for (const id of ["todas", ...ids]) { const b = document.createElement("button"); b.textContent = id === "todas" ? "Todas" : salas.get(id).s.nome; b.setAttribute("aria-pressed", String(id === foco)); b.onclick = () => { foco = id; criarAbas(); if (vista === "lista") desenharLista(); else enquadrar(); }; nav.append(b); }
 }
 let alvo = new THREE.Vector3(), meiaAlt = 10, zoom = 1, pan = new THREE.Vector3();
 function enquadrar() {
@@ -242,7 +246,7 @@ function enquadrar() {
   meiaAlt = Math.max(my, mx * h / w) * 1.04; zoom = Number(params.get("zoom")) || 1; pan.set(0, 0, 0);
 }
 let eraCel = celular();
-addEventListener("resize", () => { if (celular() !== eraCel) { eraCel = celular(); if (eraCel && foco === "todas") foco = null; agentes.clear(); montar(listaAtual); return; } enquadrar(); });
+addEventListener("resize", () => { if (vista === "lista") return; if (celular() !== eraCel) { eraCel = celular(); if (eraCel && foco === "todas") foco = null; agentes.clear(); montar(listaAtual); return; } enquadrar(); });
 const toques = new Map(); let arr = null;
 r.domElement.addEventListener("pointerdown", e => { toques.set(e.pointerId, e); arr = { x: e.clientX, y: e.clientY }; r.domElement.setPointerCapture(e.pointerId); });
 r.domElement.addEventListener("pointermove", e => {
@@ -275,17 +279,56 @@ function animar(ag, dt, tempo) {
 // ---------- rótulos HTML presos às bordas (nunca cortam) ----------
 const v = new THREE.Vector3();
 function rotulos() {
-  const W = palco.clientWidth, H = palco.clientHeight;
-  const por = (el, pos, emCima) => { v.copy(pos).project(cam); const vis = v.x > -1.15 && v.x < 1.15 && v.y > -1.15 && v.y < 1.15; el.style.display = vis ? "" : "none"; if (!vis) return;
-    const w = el.offsetWidth, hh = el.offsetHeight; let x = (v.x + 1) / 2 * W, y = (1 - v.y) / 2 * H;
-    x = Math.min(W - w / 2 - 4, Math.max(w / 2 + 4, x)); y = Math.min(H - 4, Math.max(emCima ? hh + 4 : hh / 2 + 4, y)); el.style.left = x + "px"; el.style.top = y + "px"; };
+  const W = palco.clientWidth, H = palco.clientHeight, ocupados = [];
+  const por = (el, pos, emCima) => { v.copy(pos).project(cam); const vis = v.x > -1.15 && v.x < 1.15 && v.y > -1.15 && v.y < 1.15; if (!vis) { el.style.display = "none"; return; }
+    el.style.display = ""; const w = el.offsetWidth, hh = el.offsetHeight; let x = (v.x + 1) / 2 * W, y = (1 - v.y) / 2 * H;
+    x = Math.min(W - w / 2 - 4, Math.max(w / 2 + 4, x)); y = Math.min(H - 4, Math.max(emCima ? hh + 4 : hh / 2 + 4, y));
+    // evita sobreposição: sobe o rótulo até 3 vezes; se ainda colidir, esconde (o nome continua na lista e no painel)
+    const caixa = () => emCima ? [x - w / 2, y - hh, x + w / 2, y] : [x - w / 2, y - hh / 2, x + w / 2, y + hh / 2];
+    const bate = c => ocupados.some(o => c[0] < o[2] && c[2] > o[0] && c[1] < o[3] && c[3] > o[1]);
+    let c = caixa(), k = 0; while (bate(c) && k < 3) { y -= hh + 2; c = caixa(); k++; }
+    if (bate(c) || c[1] < 0) { el.style.display = "none"; return; }
+    ocupados.push(c); el.style.left = x + "px"; el.style.top = y + "px"; };
   for (const s of salas.values()) por(s.el, s.ancora, false);
-  for (const ag of agentes.values()) { ag.pessoa.ossos.head.getWorldPosition(v); v.y += .45; por(ag.rot, v.clone(), true); }
+  const lista = [...agentes.values()].map(ag => { ag.pessoa.ossos.head.getWorldPosition(v); v.y += .45; return [ag, v.clone()]; });
+  lista.sort((a, b) => b[1].z + b[1].x - (a[1].z + a[1].x)); // mais perto da câmera primeiro
+  for (const [ag, p] of lista) por(ag.rot, p, true);
 }
+
+// ---------- vista em lista (padrão no celular) ----------
+const ROT_ST = { trabalhando: "Trabalhando", parado: "Parado", esperando: "Esperando" };
+function desenharLista() {
+  const salasCfg = cfg.salas.filter(s => foco === "todas" || s.id === foco);
+  const frag = document.createDocumentFragment();
+  for (const s of salasCfg) {
+    const pessoas = listaAtual.filter(a => a.sala === s.nome); if (!pessoas.length) continue;
+    const sec = document.createElement("section"); sec.className = "g-sala"; sec.setAttribute("aria-labelledby", "g-" + s.id);
+    const h = document.createElement("h2"); h.id = "g-" + s.id; h.style.borderColor = s.cor; h.textContent = s.nome + " ";
+    const sm = document.createElement("small"); sm.textContent = `${s.descricao} · ${pessoas.length}`; h.append(sm); sec.append(h);
+    const ul = document.createElement("ul"); ul.className = "g-cartoes";
+    for (const a of pessoas) {
+      const li = document.createElement("li"); const b = document.createElement("button"); b.className = "g-cartao " + a.status;
+      b.setAttribute("aria-label", `${a.nome}, sala ${a.sala}, ${ROT_ST[a.status]}`); b.onclick = () => abrirPainel({ sala: a.sala, nome: a.nome });
+      const n = document.createElement("span"); n.className = "g-nome"; n.textContent = a.nome;
+      const st = document.createElement("span"); st.className = "g-st"; st.innerHTML = '<i class="b" aria-hidden="true"></i>'; st.querySelector("i").classList.add(a.status); st.append(document.createTextNode(ROT_ST[a.status]));
+      b.append(n, st); li.append(b); ul.append(li);
+    }
+    sec.append(ul); frag.append(sec);
+  }
+  grade.replaceChildren(frag);
+}
+function aplicarVista() {
+  const lista = vista === "lista";
+  grade.hidden = !lista; palco.hidden = lista;
+  btnVista.textContent = lista ? "Ver cena 3D" : "Ver lista"; btnVista.setAttribute("aria-pressed", String(!lista));
+  if (lista) desenharLista(); else { if (celular() && foco === "todas") foco = null; criarAbas(); enquadrar(); }
+}
+btnVista.onclick = () => { vista = vista === "lista" ? "cena" : "lista"; aplicarVista(); };
 
 // ---------- laço ----------
 const relogio = new THREE.Clock(); const perf = window.__perf = { quadros: 0 };
 function laco() {
+  if (vista === "lista") { requestAnimationFrame(laco); return; }
   const dt = Math.min(relogio.getDelta(), .1), tempo = relogio.elapsedTime;
   for (const ag of agentes.values()) animar(ag, dt, tempo);
   const a = alvo.clone().add(pan), aspecto = palco.clientWidth / palco.clientHeight, mh = meiaAlt * zoom;
@@ -296,6 +339,7 @@ const selo = document.getElementById("selo"); selo.textContent = fonte.selo + (p
 try { atualizarLista(await fonte.carregar()); } catch (e) { selo.textContent = "Falha ao ler status: " + e.message; }
 fonte.assinar(atualizarLista);
 document.getElementById("carregando").remove();
+aplicarVista();
 if (params.get("painel")) abrirPainel(JSON.parse(params.get("painel")));
 window.__ag = agentes; window.__pronto = true; window.__info = () => ({ agentes: agentes.size, triangulos: r.info.render.triangles, chamadas: r.info.render.calls, T_SENTADO, T_FIM });
 laco();

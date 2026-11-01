@@ -17,13 +17,13 @@ As trocas de status tocam a transição real do clipe (sentar ou levantar, cerca
 ## Histórias
 - Como Otávio, vejo todas as salas numa tela Full HD e sei quem está trabalhando.
 - Como Otávio, toco numa sala ou pessoa e vejo os detalhes. Projeto e tarefa aparecem só no modo privado local (ADR-0010).
-- No celular, vejo uma sala por vez, sem faixa vazia, e troco de sala pelas abas.
+- No celular (até 768 px), abro numa lista de cartões por sala (nome, cor + texto do status), com filtro de salas e contagem fixos no topo, e posso alternar para a cena 3D (ADR-0011).
 
 ## Requisitos (atendidos no protótipo)
 - O contrato de entrada continua `{nome, sala, status}`. Campos a mais são descartados no navegador.
 - O padrão é o status real em `publico/status.json`; `?fonte=exemplo` usa `dados/exemplo.json`. `?teste=trabalhando|parado|esperando|misto` lê arquivos de teste locais de uma lista fechada.
 - O layout vem de `prototipo-fullhd/config/escritorio.json`: salas, cores, colunas, áreas extras e regras do celular. Há uma mesa por agente.
-- Os rótulos são HTML, presos às bordas da tela, e não cortam. Também são clicáveis.
+- Os rótulos são HTML, presos às bordas da tela, e não se sobrepõem: em colisão sobem ou são ocultados (o nome segue na lista e no painel). Também são clicáveis.
 - Há uma lista oculta para leitor de tela com nome, sala e status.
 - Câmera: arrastar move a vista, roda ou pinça dá zoom, e as abas focam uma sala.
 
@@ -47,6 +47,9 @@ Leitura honesta: os quadros por segundo acima são de **renderização por softw
 
 ## Fora do escopo
 Usar rostos ou corpos diferentes por agente.
+
+## Capturas da versão celular (01/11/2026)
+`prototipo-fullhd/capturas/`: `celular-lista-real.png`, `celular-lista-teste-misto.png`, `celular-lista-teste-misto-domma.png`, `celular-cena-teste-misto.png`, `celular-cena-real.png`, `fullhd-cena-real.png`, `fullhd-cena-teste-misto.png` e `fullhd-lista-teste-misto.png`. Em todas, a verificação automática encontrou 0 rótulos fora da área visível.
 
 ## Dúvidas em aberto
 - Ter mais de um modelo de pessoa CC0 para dar variedade.

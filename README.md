@@ -3,6 +3,7 @@ Painel que mostra o time de agentes de IA do Otávio por sala (RedBox, Vértice,
 
 - **Página principal** (`index.html`): cena 3D isométrica em Full HD com pessoas realistas (modelo CC0, ver `docs/licencas-assets.md`). Usa por padrão o **status real** de `publico/status.json`.
   - `?fonte=exemplo` mostra dados inventados; `?sala=redbox` abre focado numa sala.
+  - No celular (até 768 px) abre numa lista por sala; o botão "Ver cena 3D" alterna. `?vista=cena|lista` força a vista.
   - Clique numa sala ou pessoa para ver os detalhes. A versão pública mostra só nome, sala e status.
 - **Versão clássica** (pixel art): `classico.html`. Demos 3D antigas: `demo-3d-jogo.html`, `demo-3d-executivo.html`, `comparar-3d.html`, `demo-animacao.html`.
 - O código do visual novo fica em `prototipo-fullhd/` (layout em `prototipo-fullhd/config/escritorio.json`).
@@ -20,4 +21,4 @@ Painel que mostra o time de agentes de IA do Otávio por sala (RedBox, Vértice,
 python3 -m http.server 3200 --bind 127.0.0.1   # abra http://127.0.0.1:3200/
 ```
 ## Documentação
-`docs/especificacao/visual-fullhd.md` (PRD), `docs/adr/0001–0010`, `docs/licencas-assets.md`, `docs/fonte-arquivos.md`, `docs/instrucoes-agentes.md`.
+`docs/especificacao/visual-fullhd.md` (PRD), `docs/adr/0001–0011`, `docs/licencas-assets.md`, `docs/fonte-arquivos.md`, `docs/instrucoes-agentes.md`.

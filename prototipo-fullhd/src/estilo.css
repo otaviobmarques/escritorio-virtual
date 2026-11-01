@@ -21,7 +21,7 @@ main canvas{display:block;width:100%;height:100%;touch-action:none}
 .rot-sala small{font-weight:400;opacity:.9;margin-left:6px}
 #carregando{position:absolute;inset:0;display:grid;place-items:center;margin:0;font-size:18px}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
-@media (max-width:760px){
+@media (max-width:768px){
   header{padding:8px 10px;gap:6px 10px}
   h1{font-size:17px}
   .legenda{font-size:12px;gap:10px}
@@ -38,7 +38,29 @@ button.rot-sala{color:#fff;border:0}
 #painel .nota{font-size:12px;background:#f6f3ee;padding:8px;border-radius:8px}
 #painel ul{list-style:none;padding:0;margin:0}#painel li{border-top:1px solid #eee;padding:8px 0;font-size:13px;line-height:1.45}
 #painel .nome{font-weight:600}.fechar{float:right;font:inherit;font-size:12px;border:1px solid #ccc;background:#fff;border-radius:6px;padding:3px 8px;cursor:pointer}
-@media (max-width:760px){#corpo{flex-direction:column}#painel{width:auto;flex:0 0 42%;border-left:0;border-top:1px solid #ddd5ca}}
+@media (max-width:768px){#corpo{flex-direction:column}#painel{width:auto;flex:0 0 42%;border-left:0;border-top:1px solid #ddd5ca}}
 
 .classico{font-size:12px;color:#555}
-@media (max-width:760px){.classico{display:none}}
+@media (max-width:768px){.classico{display:none}}
+/* ---------- vista em lista (padrão até 768px) ---------- */
+header{position:sticky;top:0}
+.alternar{font:inherit;font-size:13px;font-weight:600;padding:6px 12px;border-radius:8px;border:1px solid #222;background:#222;color:#fff;cursor:pointer}
+.grade{flex:1;min-height:0;overflow:auto;padding:12px;background:#f4f2ee}
+.g-sala{margin:0 0 16px}
+.g-sala h2{font-size:16px;margin:0 0 8px;padding-left:8px;border-left:6px solid}
+.g-sala h2 small{font-weight:400;color:#555;font-size:13px}
+.g-cartoes{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.g-cartao{width:100%;text-align:left;font:inherit;background:#fff;border:1px solid #d6cfc4;border-left:5px solid #8d8a85;border-radius:10px;padding:9px 10px;cursor:pointer;display:flex;flex-direction:column;gap:3px;color:#1f1f1f}
+.g-cartao.trabalhando{border-left-color:#1f7a43}.g-cartao.esperando{border-left-color:#b37a00}
+.g-nome{font-weight:700;font-size:15px;overflow-wrap:anywhere}
+.g-st{font-size:13px;color:#333;display:flex;align-items:center;gap:6px}
+.g-cartao:focus-visible,.abas button:focus-visible,.alternar:focus-visible,button.rot:focus-visible{outline:3px solid #1d5fd6;outline-offset:2px}
+[hidden]{display:none!important}
+@media (max-width:768px){
+  header{padding:8px 10px;gap:6px 10px}
+  .abas{margin-left:0;width:100%;overflow-x:auto;flex-wrap:nowrap}
+  .abas button{flex:0 0 auto;min-height:36px}
+  .alternar{min-height:36px}
+  .rot{font-size:11px;padding:2px 6px 2px 4px}
+  .classico{display:none}
+}

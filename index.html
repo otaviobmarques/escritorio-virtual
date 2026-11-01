@@ -6,16 +6,17 @@
 <script type="importmap">{"imports":{"three":"./vendor/three.module.min.js","three/addons/":"./prototipo-fullhd/vendor/addons/"}}</script>
 </head><body>
 <header>
-  <div class="tit"><h1>Escritório Virtual</h1><span class="selo" id="selo" role="status">carregando…</span></div>
-  <nav class="legenda" aria-label="Legenda de status">
+  <div class="tit"><h1>Escritório Virtual</h1><span class="selo" id="selo">carregando…</span></div>
+  <nav class="legenda" aria-label="Contagem por status" aria-live="polite">
     <span><i class="b trabalhando"></i>Trabalhando <b id="c-trabalhando">0</b></span>
     <span><i class="b parado"></i>Parado <b id="c-parado">0</b></span>
     <span><i class="b esperando"></i>Esperando <b id="c-esperando">0</b></span>
   </nav>
-  <nav class="abas" id="abas" aria-label="Salas"></nav>
+  <nav class="abas" id="abas" aria-label="Filtrar por sala"></nav>
+  <button type="button" id="alternar-vista" class="alternar" aria-controls="grade palco">Ver lista</button>
   <a class="classico" href="classico.html">Versão clássica (pixel art)</a>
 </header>
-<div id="corpo"><main id="palco" aria-describedby="lista">
+<div id="corpo"><section id="grade" class="grade" aria-label="Agentes por sala" hidden></section><main id="palco" aria-describedby="lista">
   <div id="rotulos"></div>
   <p id="carregando">Carregando cena 3D…</p>
 </main>
