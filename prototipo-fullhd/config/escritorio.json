@@ -22,35 +22,45 @@
    "id": "redbox",
    "descricao": "Agência",
    "cor": "#d64545",
-   "colunas": 5
+   "colunas": 5,
+   "corLogo": "#F0222A",
+   "origemCor": "redbox/agencia/redbox/design-system/cores/paleta.json (\"Vermelho RedBox\") e logo/redbox_logo_cor.svg"
   },
   {
    "nome": "Vértice",
    "id": "vertice",
    "descricao": "Produtora de vídeo",
    "cor": "#7b5cd6",
-   "colunas": 5
+   "colunas": 5,
+   "corLogo": "#00E5A0",
+   "origemCor": "redbox/clientes/vertice/logo/final-wireframe/pacote-alta-qualidade/vertice_logo_para-fundo-claro.svg (cor de destaque)"
   },
   {
    "nome": "Restaurantes",
    "id": "restaurantes",
    "descricao": "Operação de restaurantes",
    "cor": "#e08a2e",
-   "colunas": 3
+   "colunas": 3,
+   "corLogo": null,
+   "origemCor": "sem logo único (cada restaurante tem sua marca): cor neutra provisória"
   },
   {
    "nome": "Jurídico",
    "id": "juridico",
    "descricao": "Departamento jurídico",
    "cor": "#3a8f6b",
-   "colunas": 3
+   "colunas": 3,
+   "corLogo": null,
+   "origemCor": "sem logo próprio no box: cor neutra provisória"
   },
   {
    "nome": "Domma",
    "id": "domma",
    "descricao": "Sistemas",
    "cor": "#2f7fd0",
-   "colunas": 5
+   "colunas": 5,
+   "corLogo": "#7B61FF",
+   "origemCor": "redbox/clientes/domma-tecnologia/logo/final-sinal/gerar.py (cor de destaque AC do sinal final)"
   }
  ],
  "areasExtras": [
@@ -71,5 +81,8 @@
  ],
  "modeloPessoa": "assets/harper-leve.glb",
  "colunasCelular": 2,
- "salasPorFileiraCelular": 1
+ "salasPorFileiraCelular": 1,
+ "corNeutra": "#8A8580",
+ "distanciaMinimaCor": 25,
+ "observacaoCores": "corLogo vem do logotipo real (origemCor). Sem logo => corNeutra. Se duas salas têm corLogo com distância CIE76 (Lab) menor que distanciaMinimaCor, ambas usam corNeutra (regra do Otávio). 'cor' antiga fica só como referência."
 }

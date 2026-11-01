@@ -15,12 +15,36 @@ const hash = s => { let h = 7; for (const c of s) h = (h * 31 + c.charCodeAt(0))
 const celular = () => innerWidth <= 768;
 
 const cfg = await (await fetch(url("config/escritorio.json"), { cache: "no-store" })).json();
+resolverCores(cfg);
 const fonte = criarFonte(cfg, params, url);
 const privado = params.get("modo") === "privado";
 const palco = document.getElementById("palco"), camRot = document.getElementById("rotulos");
 let vista = params.get("vista") || (celular() ? "lista" : "cena");
 const grade = document.getElementById("grade"), btnVista = document.getElementById("alternar-vista");
 
+
+// ---------- cores das salas: logotipo real; sem logo ou cores parecidas => neutra ----------
+function lab(hex) {
+  const n = parseInt(hex.slice(1), 16), c = [n >> 16, (n >> 8) & 255, n & 255].map(v => { v /= 255; return v > .04045 ? ((v + .055) / 1.055) ** 2.4 : v / 12.92; });
+  const xyz = [(c[0] * .4124 + c[1] * .3576 + c[2] * .1805) / .95047, c[0] * .2126 + c[1] * .7152 + c[2] * .0722, (c[0] * .0193 + c[1] * .1192 + c[2] * .9505) / 1.08883]
+    .map(t => t > .008856 ? Math.cbrt(t) : 7.787 * t + 16 / 116);
+  return [116 * xyz[1] - 16, 500 * (xyz[0] - xyz[1]), 200 * (xyz[1] - xyz[2])];
+}
+export function resolverCores(c) {
+  const lim = c.distanciaMinimaCor ?? 25, neutra = c.corNeutra || "#8A8580";
+  for (const s of c.salas) { s.corEfetiva = s.corLogo || neutra; s.motivoCor = s.corLogo ? "logotipo" : "sem logotipo (neutra provisória)"; }
+  const comLogo = c.salas.filter(s => s.corLogo);
+  for (const a of comLogo) for (const b of comLogo) if (a !== b) {
+    const [l1, a1, b1] = lab(a.corLogo), [l2, a2, b2] = lab(b.corLogo);
+    if (Math.hypot(l1 - l2, a1 - a2, b1 - b2) < lim) { a.corEfetiva = neutra; a.motivoCor = `cor parecida com ${b.nome} (neutra)`; }
+  }
+  for (const s of c.salas) s.cor = s.corEfetiva; // a cena 3D e a lista usam a mesma cor
+}
+function textoSobre(hex) { // texto preto ou branco, o que der mais contraste (WCAG)
+  const n = parseInt(hex.slice(1), 16), L = [n >> 16, (n >> 8) & 255, n & 255].map(v => { v /= 255; return v > .04045 ? ((v + .055) / 1.055) ** 2.4 : v / 12.92; }).reduce((t, v, i) => t + v * [.2126, .7152, .0722][i], 0);
+  return (1.05) / (L + .05) >= (L + .05) / (0.0144 + .05) ? "#ffffff" : "#111111";
+}
+window.__cores = () => cfg.salas.map(s => ({ sala: s.nome, cor: s.corEfetiva, motivo: s.motivoCor }));
 
 // ---------- renderizador, luz clara ----------
 const r = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance", preserveDrawingBuffer: params.has("captura") });
@@ -154,7 +178,7 @@ function montar(lista) {
       const pl = planta(1); pl.position.set(-c.w / 2 + .45, 0, -prof / 2 + .45); grupo.add(pl);
       const pl2 = planta(.8); pl2.position.set(c.w / 2 - .45, 0, -prof / 2 + .45); grupo.add(pl2);
       const id = c.s?.id ?? c.extra.id;
-      const el = document.createElement("button"); el.className = "rot-sala"; el.style.background = cor; el.innerHTML = "<span></span><small></small>";
+      const el = document.createElement("button"); el.className = "rot-sala"; el.style.background = cor; el.style.color = textoSobre(cor); el.innerHTML = "<span></span><small></small>";
       el.firstChild.textContent = c.s?.nome ?? c.extra.nome; el.lastChild.textContent = c.s?.descricao ?? ""; camRot.append(el);
       if (c.s) el.onclick = () => abrirPainel({ sala: c.s.nome });
       const caixa = new THREE.Box3(new THREE.Vector3(-c.w / 2, 0, -prof / 2), new THREE.Vector3(c.w / 2, 1.8, prof / 2)).translate(grupo.position);
@@ -246,7 +270,7 @@ function enquadrar() {
   meiaAlt = Math.max(my, mx * h / w) * 1.04; zoom = Number(params.get("zoom")) || 1; pan.set(0, 0, 0);
 }
 let eraCel = celular();
-addEventListener("resize", () => { if (vista === "lista") return; if (celular() !== eraCel) { eraCel = celular(); if (eraCel && foco === "todas") foco = null; agentes.clear(); montar(listaAtual); return; } enquadrar(); });
+addEventListener("resize", () => { if (vista === "lista") { desenharLista(); return; } if (celular() !== eraCel) { eraCel = celular(); if (eraCel && foco === "todas") foco = null; agentes.clear(); montar(listaAtual); return; } enquadrar(); });
 const toques = new Map(); let arr = null;
 r.domElement.addEventListener("pointerdown", e => { toques.set(e.pointerId, e); arr = { x: e.clientX, y: e.clientY }; r.domElement.setPointerCapture(e.pointerId); });
 r.domElement.addEventListener("pointermove", e => {
@@ -297,25 +321,57 @@ function rotulos() {
 
 // ---------- vista em lista (padrão no celular) ----------
 const ROT_ST = { trabalhando: "Trabalhando", parado: "Parado", esperando: "Esperando" };
+function cartaoPessoa(a, compacto) {
+  const li = document.createElement("li"); const b = document.createElement("button"); b.className = (compacto ? "q-pessoa " : "g-cartao ") + a.status;
+  b.setAttribute("aria-label", `${a.nome}, sala ${a.sala}, ${ROT_ST[a.status]}`); b.onclick = () => abrirPainel({ sala: a.sala, nome: a.nome });
+  const n = document.createElement("span"); n.className = compacto ? "q-nome" : "g-nome"; n.textContent = a.nome;
+  const st = document.createElement("span"); st.className = compacto ? "q-st" : "g-st"; const i = document.createElement("i"); i.className = "b " + a.status; i.setAttribute("aria-hidden", "true");
+  st.append(i, document.createTextNode(ROT_ST[a.status])); b.append(n, st); li.append(b); return li;
+}
+function contagem(pessoas) { return cfg.status.map(st => [st, pessoas.filter(a => a.status === st).length]); }
+let paginaInicial = Number(params.get("pagina")) || 1;
 function desenharLista() {
-  const salasCfg = cfg.salas.filter(s => foco === "todas" || s.id === foco);
+  const salasCfg = cfg.salas.filter(s => (foco === "todas" || s.id === foco) && listaAtual.some(a => a.sala === s.nome));
+  if (celular()) return desenharQuadrantes(salasCfg);
   const frag = document.createDocumentFragment();
   for (const s of salasCfg) {
-    const pessoas = listaAtual.filter(a => a.sala === s.nome); if (!pessoas.length) continue;
+    const pessoas = listaAtual.filter(a => a.sala === s.nome);
     const sec = document.createElement("section"); sec.className = "g-sala"; sec.setAttribute("aria-labelledby", "g-" + s.id);
     const h = document.createElement("h2"); h.id = "g-" + s.id; h.style.borderColor = s.cor; h.textContent = s.nome + " ";
     const sm = document.createElement("small"); sm.textContent = `${s.descricao} · ${pessoas.length}`; h.append(sm); sec.append(h);
-    const ul = document.createElement("ul"); ul.className = "g-cartoes";
-    for (const a of pessoas) {
-      const li = document.createElement("li"); const b = document.createElement("button"); b.className = "g-cartao " + a.status;
-      b.setAttribute("aria-label", `${a.nome}, sala ${a.sala}, ${ROT_ST[a.status]}`); b.onclick = () => abrirPainel({ sala: a.sala, nome: a.nome });
-      const n = document.createElement("span"); n.className = "g-nome"; n.textContent = a.nome;
-      const st = document.createElement("span"); st.className = "g-st"; st.innerHTML = '<i class="b" aria-hidden="true"></i>'; st.querySelector("i").classList.add(a.status); st.append(document.createTextNode(ROT_ST[a.status]));
-      b.append(n, st); li.append(b); ul.append(li);
-    }
+    const ul = document.createElement("ul"); ul.className = "g-cartoes"; for (const a of pessoas) ul.append(cartaoPessoa(a, false));
     sec.append(ul); frag.append(sec);
   }
-  grade.replaceChildren(frag);
+  grade.className = "grade"; grade.replaceChildren(frag);
+}
+// Celular: 4 quadrantes (2x2) por página, uma sala por quadrante; mais de 4 salas => páginas lado a lado (scroll-snap)
+function desenharQuadrantes(salasCfg) {
+  const paginas = []; for (let i = 0; i < salasCfg.length; i += 4) paginas.push(salasCfg.slice(i, i + 4));
+  const trilho = document.createElement("div"); trilho.className = "q-trilho"; trilho.setAttribute("role", "region"); trilho.setAttribute("aria-roledescription", "carrossel"); trilho.setAttribute("aria-label", "Salas, 4 por página"); trilho.tabIndex = 0;
+  paginas.forEach((pg, ip) => {
+    const p = document.createElement("div"); p.className = "q-pagina" + (pg.length === 1 ? " uma" : pg.length === 2 ? " duas" : "");
+    p.setAttribute("role", "group"); p.setAttribute("aria-roledescription", "página"); p.setAttribute("aria-label", `Página ${ip + 1} de ${paginas.length}`);
+    for (const s of pg) {
+      const pessoas = listaAtual.filter(a => a.sala === s.nome);
+      const q = document.createElement("section"); q.className = "q-sala"; q.style.setProperty("--cor", s.cor); q.setAttribute("aria-labelledby", "q-" + s.id);
+      const h = document.createElement("h2"); h.id = "q-" + s.id; h.textContent = s.nome; q.append(h);
+      const c = document.createElement("p"); c.className = "q-cont";
+      for (const [st, n] of contagem(pessoas)) { const sp = document.createElement("span"); const i = document.createElement("i"); i.className = "b " + st; i.setAttribute("aria-hidden", "true"); sp.append(i, document.createTextNode(String(n))); sp.title = ROT_ST[st]; sp.setAttribute("aria-label", `${ROT_ST[st]}: ${n}`); c.append(sp); }
+      q.append(c);
+      const ul = document.createElement("ul"); ul.className = "q-pessoas"; ul.setAttribute("aria-label", `Pessoas da sala ${s.nome}`); ul.tabIndex = 0;
+      for (const a of pessoas) ul.append(cartaoPessoa(a, true));
+      q.append(ul); p.append(q);
+    }
+    trilho.append(p);
+  });
+  const ind = document.createElement("div"); ind.className = "q-ind"; ind.setAttribute("aria-label", "Páginas");
+  const pontos = paginas.map((_, i) => { const b = document.createElement("button"); b.type = "button"; b.setAttribute("aria-label", `Ir para a página ${i + 1}`); b.onclick = () => trilho.scrollTo({ left: i * trilho.clientWidth, behavior: "smooth" }); ind.append(b); return b; });
+  const marcar = () => { const i = Math.round(trilho.scrollLeft / Math.max(1, trilho.clientWidth)); pontos.forEach((b, k) => b.setAttribute("aria-current", k === i ? "page" : "false")); };
+  trilho.addEventListener("scroll", () => requestAnimationFrame(marcar), { passive: true });
+  const antes = grade.querySelector(".q-trilho")?.scrollLeft || 0;
+  grade.className = "grade quad"; grade.replaceChildren(trilho, ...(paginas.length > 1 ? [ind] : []));
+  const pos = () => { if (paginaInicial > 1 && trilho.clientWidth) { trilho.scrollLeft = (paginaInicial - 1) * trilho.clientWidth; paginaInicial = 1; } else if (antes) trilho.scrollLeft = antes; marcar(); };
+  pos(); requestAnimationFrame(pos);
 }
 function aplicarVista() {
   const lista = vista === "lista";
